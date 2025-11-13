@@ -17,7 +17,8 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <!--        <exec.mainClass>GuiServer</exec.mainClass>-->
-        <exec.mainClass>PokerServer</exec.mainClass>
+<!--        <exec.mainClass>PokerServer</exec.mainClass>-->
+        <exec.mainClass>ServerMain</exec.mainClass>
     </properties>
 
     <dependencies>

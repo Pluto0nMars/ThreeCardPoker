@@ -1,6 +1,8 @@
-Server.class
 PokerServer.class
+ServerMain.class
 Client.class
 Server$ClientThread.class
-Server$TheServer.class
 PokerServer$ClientThread.class
+ServerGUIController.class
+Server.class
+Server$TheServer.class

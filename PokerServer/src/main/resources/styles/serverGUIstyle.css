@@ -1,0 +1,29 @@
+/*
+do we keep this static with, or should it be able to change dynamically also. all I think it
+would require would be 2 additional css sheets with different colors and some event handle switch style
+but idk if thats even true, or worth doing
+
+keep it trivial for now
+*/
+.root{
+    -fx-font-family: "Comic Sans MS";
+    -fx-background-color: #bab6f5;
+    -fx-border-color: #eecb49;
+}
+
+.text-field{
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: black;
+    -fx-background-color: #8e8bb2;
+    -fx-border-color: #eecb49;
+}
+
+.button{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-background-color: #eecb49;
+}
