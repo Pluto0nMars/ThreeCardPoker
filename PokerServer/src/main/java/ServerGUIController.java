@@ -40,12 +40,15 @@ public class ServerGUIController implements Initializable {
 
     @FXML
     public void startServerMethod()  {
-
+        startServer.setDisable(true);
+        startServer.setText("Server Started");
     }
 
     @FXML
     public void endServerMethod()  {
         // maybe needs to be recursive to end all clients.... or we can just shut down the server?
+        endServer.setDisable(true);
+        startServer.setText("Server Ended");
     }
 
 }
