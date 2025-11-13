@@ -1,6 +1,6 @@
-GuiServer.class
+Server.class
+PokerServer.class
 Client.class
 Server$ClientThread.class
-Server.class
-GuiServer$1.class
 Server$TheServer.class
+PokerServer$ClientThread.class
