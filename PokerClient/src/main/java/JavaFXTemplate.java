@@ -30,6 +30,8 @@ public class JavaFXTemplate extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/clientFXML.fxml"));
             primaryStage.setTitle("Three-Card-Poker Join");
             Scene welcomeScene = new Scene(root, 700,700);
+
+            welcomeScene.getStylesheets().add("/clientStyles/clientStyle_1.css");
             primaryStage.setScene(welcomeScene);
             primaryStage.show();
 
