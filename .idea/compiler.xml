@@ -6,12 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="projectThreeClient" />
+        <module name="projectThreeServer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="JavaFXGUIServer" target="1.8" />
-      <module name="projectThreeClient" target="11" />
-      <module name="projectThreeServer" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
