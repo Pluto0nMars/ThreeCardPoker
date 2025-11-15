@@ -5,10 +5,13 @@ import java.net.UnknownHostException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 
 public class ClientController {
@@ -26,21 +29,36 @@ public class ClientController {
 
     private PokerClient client = new PokerClient();
 
-    private void connectToServer(){
-        Socket socketClient;
-        String ip = ipTextField.getText().trim();
-        int port = Integer.parseInt(portTextField.getText());
-//        client.connectToServer(ip, port);
-        try{
-            socketClient = new Socket(ip, port);
+    private boolean connectToServer(){
 
-        } catch (Exception e){}
+        try{
+            String ip = ipTextField.getText().trim();
+            int port = Integer.parseInt(portTextField.getText());
+            Socket socketClient = new Socket(ip, port);
+
+            System.out.println("Successful Connection!");
+            return true;
+
+        }catch (Exception e){
+
+            System.err.println("Connection failed: " + e.getMessage());
+            return false;
+        }
+
+//        client.connectToServer(ip, port);
 
     }
 
     public void joinMethod(ActionEvent e) throws IOException{
         try{
-            connectToServer();
+            if(connectToServer()){
+                Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/welcomeScene.fxml"));
+                Scene welcomeScene = new Scene(root, 700,700);
+
+                welcomeScene.getStylesheets().add("/clientStyles/welcomeStyle.css");
+                Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                currentStage.setScene(welcomeScene);
+            }
         } catch (Exception ex) {
             System.err.println("Error Connecting: " + ex.getMessage());
         }
