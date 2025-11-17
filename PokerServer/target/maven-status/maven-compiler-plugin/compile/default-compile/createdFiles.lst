@@ -1,7 +1,9 @@
+ThreeCardLogic$Card.class
 PokerServer.class
 ServerMain.class
 Client.class
 Server$ClientThread.class
+ThreeCardLogic.class
 PokerServer$ClientThread.class
 ServerGUIController.class
 Server.class
