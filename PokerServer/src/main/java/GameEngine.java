@@ -1,6 +1,7 @@
 package PokerServer.src.main.java;
 
 import java.util.ArrayList;
+import PokerServer.src.main.java.Card;
 
 public class GameEngine {
     public static Hand.Handrank evaluate(Hand hand){
@@ -25,7 +26,6 @@ public class GameEngine {
 
     private static boolean isStraight(ArrayList<Card> cards){
         return false;
-//        return (cards.get(0).getRank() == cards.get(1).getRank() && cards.get(1).getRank() == cards.get(2).getRank());
     }
 
     private static boolean isFlush(ArrayList<Card> cards){
