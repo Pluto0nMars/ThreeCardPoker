@@ -1,4 +1,4 @@
-//package PokerServer.src.main.java;
+package PokerServer.src.main.java;
 
 public class Card {
 

@@ -1,11 +1,12 @@
-//package PokerServer.src.main.java;
+package PokerServer.src.main.java;
 
+import javax.management.RuntimeErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+//import PokerServer.src.main.java.Card;
 
-import Card;
 public class Deck {
     private final ArrayList<Card> cards;
 
@@ -30,8 +31,11 @@ public class Deck {
     //    52/3 == 17.33
     // function can only be called max of 17 times with same deck
     public Card deal(){
-        if (!cards.isEmpty()){
-            return cards.getLast();
+        if (cards.isEmpty()){
+            throw new ArrayIndexOutOfBoundsException("Empty deck");
+        }
+        else{
+            return cards.get(cards.size()-1);
         }
     }
 
