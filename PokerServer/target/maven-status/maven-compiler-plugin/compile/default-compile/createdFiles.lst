@@ -8,9 +8,11 @@ PokerServer\src\main\java\Hand.class
 PokerServer\src\main\java\Deck.class
 PokerServer\src\main\java\Card.class
 PokerServer.class
+PokerServer\src\main\java\GameEngine.class
 Server$ClientThread.class
 PokerServer$ClientThread.class
 ServerGUIController.class
+ServerMain$ServerThread.class
 PokerServer\src\main\java\Card$Rank.class
 Server.class
 PokerServer\src\main\java\Round.class

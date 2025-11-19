@@ -1,10 +1,10 @@
 package PokerServer.src.main.java;
 
 import java.util.ArrayList;
-import PokerServer.src.main.java.Card;
+import PokerServer.src.main.java.Hand;
 
 public class GameEngine {
-    public static Hand.Handrank evaluate(Hand hand){
+    public static PokerServer.src.main.java.Hand.Handrank evaluate(Hand hand){
         ArrayList<Card> cards = hand.getCards();
 
         boolean threeOfKind = isThreeOfKind(cards);
@@ -17,6 +17,7 @@ public class GameEngine {
         else if(isStraight(cards)){ return Hand.Handrank.STRAIGHT;}
         else if(isFlush(cards)){ return Hand.Handrank.FLUSH;}
         else if(isPair(cards)){ return Hand.Handrank.PAIR;}
+        return Hand.Handrank.PAIR;
     }
 
 

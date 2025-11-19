@@ -31,6 +31,7 @@ public class PokerServer {
                 c.start();
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -69,11 +70,12 @@ public class PokerServer {
             }
         }
 
+
     }
 
-    public static void main(String[] args){
-        new PokerServer().run();
-    }
+//    public static void main(String[] args){
+//        new PokerServer().run();
+//    }
 }
 
 
