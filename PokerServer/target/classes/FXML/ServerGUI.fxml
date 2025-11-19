@@ -6,7 +6,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="ServerGUIController"
@@ -18,8 +17,8 @@
             <padding>
                 <Insets top="30" right="30" bottom="30" left="30"/>
             </padding>
-            <Button fx:id="startServer" text="Start Server" onAction="#startServerMethod" prefWidth="150" prefHeight="50" maxWidth="300" maxHeight="100" HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="numClients" text="0 Players" alignment="CENTER" prefWidth="150" prefHeight="50" maxWidth="300" maxHeight="100" HBox.hgrow="ALWAYS"/>      <!-- dynamic textbox that updates with players join/leave-->
+            <Button fx:id="startServer" text="Server Started" disable="true" prefWidth="150" prefHeight="50" maxWidth="300" maxHeight="100" HBox.hgrow="ALWAYS"/>         <!--onAction="#startServerMethod"-->
+            <TextField fx:id="numClients" text="0 Players" alignment="CENTER" editable="false" prefWidth="150" prefHeight="50" maxWidth="300" maxHeight="100" HBox.hgrow="ALWAYS"/>      <!-- dynamic textbox that updates with players join/leave-->
             <Button fx:id="endServer" text="End Server" onAction="#endServerMethod" prefWidth="150" prefHeight="50" maxWidth="300" maxHeight="100" HBox.hgrow="ALWAYS"/>
         </HBox>
     </top>

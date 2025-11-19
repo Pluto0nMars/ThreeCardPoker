@@ -6,10 +6,7 @@ import java.net.Socket;
 import java.util.function.Consumer;
 
 
-//alex sucks
 public class Client extends Thread{
-
-	
 	Socket socketClient;
 	
 	ObjectOutputStream out;

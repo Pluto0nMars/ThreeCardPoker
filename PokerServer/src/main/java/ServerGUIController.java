@@ -49,6 +49,8 @@ public class ServerGUIController implements Initializable {
         // maybe needs to be recursive to end all clients.... or we can just shut down the server?
         endServer.setDisable(true);
         startServer.setText("Server Ended");
+
+        // add logic here
     }
 
 }
