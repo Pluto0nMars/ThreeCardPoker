@@ -6,9 +6,68 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="GamePlayController"
             prefHeight="400.0" prefWidth="600.0">
+    <center>
+        <VBox>
+            <HBox>
+                <ImageView fx:id="dealerCard1"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
 
-</AnchorPane>
+                <ImageView fx:id="dealerCard2"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
+
+                <ImageView fx:id="dealerCard3"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
+            </HBox>
+
+            <HBox>
+                <ImageView fx:id="playerCard1"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
+
+                <ImageView fx:id="playerCard2"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
+
+                <ImageView fx:id="playerCard3"
+                           fitWidth="120"
+                           fitHeight="180"
+                           preserveRatio="true"
+                           style="-fx-background-color: black;
+                      -fx-border-color: white;
+                      -fx-border-width: 3;" />
+            </HBox>
+        </VBox>
+    </center>
+
+
+
+
+</BorderPane>

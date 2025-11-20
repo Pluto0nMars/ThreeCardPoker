@@ -24,12 +24,20 @@ public class GamePlayController {
 
     @FXML
     ImageView dealerCard1 = new ImageView();
+
+    @FXML
     ImageView dealerCard2 = new ImageView();
+
+    @FXML
     ImageView dealerCard3 = new ImageView();
 
     @FXML
     ImageView playerCard1 = new ImageView();
+
+    @FXML
     ImageView playerCard2 = new ImageView();
+
+    @FXML
     ImageView playerCard3 = new ImageView();
 
 }
