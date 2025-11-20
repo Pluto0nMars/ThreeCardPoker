@@ -1,59 +1,60 @@
+package PokerServer.src.main.java;
+
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Stack;
+import java.util.Arrays;
 
-class ThreeCardLogic{
-    private Stack<Card> deck;
-    class Card {
-        private char suit;
-        private int value;
+public class ThreeCardLogic{
 
+    private ArrayList<Card> hand;
 
-        Card(char suit, int value){
-
-            this.suit = suit;
-            this.value = value;
-        }
-        int getValue(){
-            return value;
-        }
-        char getSuit(){
-            return suit;
-        }
+    public static int rankHand(ArrayList<Card> hand){
+        if(isStraightFlush(hand)){ return 5;}
+        else if(isThreeOfKind(hand)){ return 4;}
+        else if(isStraight(hand)){ return 3;}
+        else if(isFlush(hand)){ return 2;}
+        else if(isPair(hand)){ return 1;}
+        return 0;
     }
 
-    //Will implement when I understand how poker works
-    public void evalHand(ArrayList<Card> hand){
-
-
+    private static boolean isStraightFlush(ArrayList<Card> cards){
+        return isStraight(cards) && isFlush(cards);
     }
 
-    //Compare player hand with dealer and return winning amount?
-   public int comparehands(ArrayList<Card> dealer, ArrayList<Card> player){
-        return  0;
-   }
+    private static boolean isThreeOfKind(ArrayList<Card> cards){
+        return (cards.get(0).getRank() == cards.get(1).getRank() && cards.get(1).getRank() == cards.get(2).getRank());
+    }
 
-   public void shuffle(){
-       Collections.shuffle(deck);
-   }
+    // order cards and then compare expected result
+    private static boolean isStraight(ArrayList<Card> cards){
+        int c1 = cards.get(0).getRank();
+        int c2 = cards.get(1).getRank();
+        int c3 = cards.get(2).getRank();
 
-   public ArrayList<Card> deal(){
-        ArrayList<Card> hand = new ArrayList<>();
-        for(int i = 0; i < 3; i++){
-            hand.add(deck.pop());
+        int[] vals = {c1,c2,c3};
+        Arrays.sort(vals);
+
+        c1 = vals[0];
+        c2 = vals[1];
+        c3 = vals[2];
+
+        if (c3 == 14){
+            return c3 == 14 && c2 == 3 && c1 == 2;
         }
-        return hand;
-   }
+        return (c1 + 1 == c2) && (c2 + 1 == c3);
+    }
 
-   public void reset(){
-       deck = new Stack<>();
-       char[] suits = {'H', 'D', 'C', 'S'};
-       for (char suit : suits) {
-           for (int value = 2; value <= 14; value++) {
-               deck.push(new Card(suit, value));
-           }
-       }
-       shuffle();
-   }
+    // flush means same suit for each card
+    private static boolean isFlush(ArrayList<Card> cards){
+        return (cards.get(0).getSuit() == cards.get(1).getSuit() && cards.get(1).getSuit() == cards.get(2).getSuit());
+    }
+
+    // pair means 2 matching
+    private static boolean isPair(ArrayList<Card> cards){
+        return (cards.get(0).getRank() == cards.get(1).getRank() || cards.get(0).getRank() == cards.get(2).getRank() || cards.get(1).getRank() == cards.get(2).getRank());
+    }
+
+
+
 }
 

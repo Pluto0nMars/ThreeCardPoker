@@ -4,17 +4,18 @@ import javax.management.RuntimeErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-//import PokerServer.src.main.java.Card;
+import PokerServer.src.main.java.Card;
 
 public class Deck {
     private final ArrayList<Card> cards;
 
     public Deck(){
         cards = new ArrayList<>();
+        char[] suits = {'H', 'D', 'C', 'S'};
+        int[] ranks = {2,3,4,5,6,7,8,9,10,11,12,13,14};
 
-        for (Card.Rank r : Card.Rank.values()){
-            for(Card.Suit s: Card.Suit.values()){
+        for (int r : ranks){
+            for(char s: suits){
                 cards.add(new Card(s, r));
             }
         }
@@ -27,9 +28,6 @@ public class Deck {
     }
 
     // pop 1 card in remaining already randomized list
-    // WHAT DO WE DO IF WE RUN OUT OF CARDS. JUST MAKE A NEW DECK AND START FROM THERE
-    //    52/3 == 17.33
-    // function can only be called max of 17 times with same deck
     public Card deal(){
         if (cards.isEmpty()){
             throw new ArrayIndexOutOfBoundsException("Empty deck");
@@ -55,6 +53,4 @@ public class Deck {
         }
         return hand;
     }
-
-
 }

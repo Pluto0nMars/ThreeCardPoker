@@ -5,14 +5,6 @@ import java.util.List;
 
 
 public class Hand {
-    public enum Handrank{
-        STRAIGHTFLUSH,
-        THREEOFAKIND,
-        STRAIGHT,
-        FLUSH,
-        PAIR;
-    }
-
 
     private final ArrayList<Card> cards;
 
