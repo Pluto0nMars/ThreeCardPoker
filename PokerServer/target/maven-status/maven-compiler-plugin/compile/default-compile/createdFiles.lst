@@ -1,10 +1,12 @@
 ServerMain.class
-PokerServer/src/main/java/PokerServer.class
-PokerServer/src/main/java/PokerServer$ClientThread.class
 PokerServer/src/main/java/PokerInfo.class
 game/Hand.class
 game/ThreeCardLogic.class
+PokerServer.class
+WelcomeController.class
 game/Deck.class
+WelcomeEntryPoint.class
+PokerServer$ClientThread.class
 ServerGUIController.class
 ServerMain$ServerThread.class
 game/Card.class

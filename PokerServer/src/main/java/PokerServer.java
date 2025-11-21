@@ -1,4 +1,4 @@
-package PokerServer.src.main.java;
+//package PokerServer.src.main.java;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,18 +11,18 @@ import java.util.function.Consumer;
 public class PokerServer {
     private ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
     int count = 1;
-    private static final int PORT = 5555;
+    private String host;
+    private int port;
 
-    //    private Consumer<Serializable> callback;
-//    PokerServer(Consumer<Serializable> call){
-//        callback = call;
-//        server = new Server.TheServer();
-//        server.start();
-//    }
+    public PokerServer(String host, int port){
+        this.host = host;
+        this.port = port;
+    }
+
 
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server on port: " + PORT + " is waiting for client(s)!");
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server on port: " + port + " is waiting for client(s)!");
 
             while (true) {
                 ClientThread c = new ClientThread(serverSocket.accept(), count);

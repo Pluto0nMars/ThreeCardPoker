@@ -1,42 +1,27 @@
-import PokerServer.src.main.java.PokerServer;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javax.swing.*;
 
-public class ServerMain extends Application {
-    class ServerThread extends Thread{
-        PokerServer myServer = new PokerServer();
-        public void run(){
+public class ServerMain {
+
+    static class ServerThread extends Thread {
+        private String host;
+        private int port;
+        PokerServer myServer;
+
+        public ServerThread(String host, int port){
+            this.host = host;
+            this.port = port;
+            myServer = new PokerServer(host, port);
+        }
+
+        @Override
+        public void run() {
             myServer.run();
         }
-
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        try {
-            // Read file fxml and draw interface.
-            ServerThread newThread = new ServerThread();
-            newThread.start();
-
-            Parent root = FXMLLoader.load(getClass().getResource("/FXML/ServerGUI.fxml"));
-            primaryStage.setTitle("PokerServer GUI");
-
-            Scene s1 = new Scene(root, 500,500);
-            s1.getStylesheets().add("/styles/serverGUIstyle.css");
-            primaryStage.setScene(s1);
-            primaryStage.show();
-
-
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-    }
-    public static void main(String[] args) {
-        launch(args);
+    // start server with IP and port
+    public void startServer(String host, int port) {
+        ServerThread newThread = new ServerThread(host, port);
+        newThread.start();
     }
 }

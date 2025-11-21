@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ServerGUIController implements Initializable {
-
     @FXML private VBox root;
     @FXML private BorderPane root2;
     @FXML private HBox top;             //
@@ -22,17 +21,11 @@ public class ServerGUIController implements Initializable {
     @FXML private HBox bottom;          //
     @FXML private TextField serverLogs;
 
+    private ServerMain serverMain = new ServerMain();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub`
-//        HBox.setHgrow(numClients, Priority.ALWAYS);
-//        HBox.setHgrow(gameLogs, Priority.ALWAYS);
-//        HBox.setHgrow(serverLogs, Priority.ALWAYS);
-//
-//        numClients.setMaxWidth(Double.MAX_VALUE);
-//        gameLogs.setMaxWidth(Double.MAX_VALUE);
-//        serverLogs.setMaxWidth(Double.MAX_VALUE);
-
         VBox.setVgrow(middle, Priority.ALWAYS);
     }
 
@@ -40,6 +33,7 @@ public class ServerGUIController implements Initializable {
     public void startServerMethod()  {
         startServer.setDisable(true);
         startServer.setText("Server Started");
+//        serverMain.startServer();
     }
 
     @FXML
@@ -47,8 +41,6 @@ public class ServerGUIController implements Initializable {
         // maybe needs to be recursive to end all clients.... or we can just shut down the server?
         endServer.setDisable(true);
         startServer.setText("Server Ended");
-
-        // add logic here
     }
 
 }

@@ -7,23 +7,33 @@ keep it trivial for now
 */
 .root{
     -fx-font-family: "Comic Sans MS";
-    -fx-background-color: #bab6f5;
-    -fx-border-color: #eecb49;
+    -fx-background-color: rgba(0, 0, 0, 0.73);
+    -fx-border-color: #ffffff;
 }
 
 .text-field{
+    -fx-font-family: "Comic Sans MS";
     -fx-font-size: 14px;
     -fx-font-weight: normal;
-    -fx-text-fill: black;
-    -fx-background-color: #8e8bb2;
-    -fx-border-color: #eecb49;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(0, 0, 0, 0.73);
+    -fx-border-color: #ffffff;
+}
+
+.text-area{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(0, 0, 0, 0.73);
+    -fx-border-color: #ffffff;
 }
 
 .button{
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-text-fill: black;
-    -fx-border-color: black;
-    -fx-background-color: #eecb49;
+    -fx-text-fill: white;
+    -fx-border-color: #ffffff;
+    -fx-background-color: rgba(0, 0, 0, 0.09);
 }
