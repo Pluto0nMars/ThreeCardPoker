@@ -1,6 +1,4 @@
-package PokerServer.src.main.java;
-
-import java.util.ArrayList;
+package PokerServer.src.main.java.game;
 
 public class Card {
 

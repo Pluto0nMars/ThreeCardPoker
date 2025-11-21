@@ -1,4 +1,4 @@
-package PokerServer.src.main.java;
+package PokerServer.src.main.java.game;
 
 /*
 A round has 1 connected client
