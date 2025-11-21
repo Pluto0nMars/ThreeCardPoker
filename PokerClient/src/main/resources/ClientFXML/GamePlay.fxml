@@ -64,8 +64,18 @@
                       -fx-border-color: white;
                       -fx-border-width: 3;" />
             </HBox>
+            <HBox>
+                <Button fx:id="drawButton"/>
+                <Button fx:id="resetButton"/>
+            </HBox>
         </VBox>
     </center>
+    <right>
+        <ListView fx:id="messageHistory"/>
+    </right>
+    <left>
+        <ComboBox fx:id="wagerList"/>
+    </left>
 
 
 

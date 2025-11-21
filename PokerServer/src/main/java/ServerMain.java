@@ -1,8 +1,11 @@
+import PokerServer.src.main.java.Deck;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class ServerMain extends Application {
     class ServerThread extends Thread{
@@ -39,5 +42,43 @@ public class ServerMain extends Application {
     }
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static class GameEngine {
+        public static PokerServer.src.main.java.Hand.Handrank evaluate(Hand hand){
+            ArrayList<Deck.Card> cards = hand.getCards();
+
+            boolean threeOfKind = isThreeOfKind(cards);
+            boolean straight = isStraight(cards);
+            boolean flush = isFlush(cards);
+            boolean pair = isPair(cards);
+
+            if(isThreeOfKind(cards) && isFlush(cards)){ return Hand.Handrank.STRAIGHTFLUSH;}
+            else if(isThreeOfKind(cards)){ return Hand.Handrank.THREEOFAKIND;}
+            else if(isStraight(cards)){ return Hand.Handrank.STRAIGHT;}
+            else if(isFlush(cards)){ return Hand.Handrank.FLUSH;}
+            else if(isPair(cards)){ return Hand.Handrank.PAIR;}
+            return Hand.Handrank.PAIR;
+        }
+
+
+        private static boolean isThreeOfKind(ArrayList<Deck.Card> cards){
+            return (cards.get(0).getRank() == cards.get(1).getRank() && cards.get(1).getRank() == cards.get(2).getRank());
+        }
+
+        private static boolean isStraight(ArrayList<Deck.Card> cards){
+            return false;
+        }
+
+        private static boolean isFlush(ArrayList<Deck.Card> cards){
+            return (cards.get(0).getSuit() == cards.get(1).getSuit() && cards.get(1).getSuit() == cards.get(2).getSuit());
+        }
+
+        private static boolean isPair(ArrayList<Deck.Card> cards){
+            return (cards.get(0).getRank() == cards.get(1).getRank() || cards.get(0).getRank() == cards.get(2).getRank() || cards.get(1).getRank() == cards.get(2).getRank());
+        }
+
+
+
     }
 }

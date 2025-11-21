@@ -1,7 +1,6 @@
 package PokerServer.src.main.java;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Hand {
@@ -14,13 +13,13 @@ public class Hand {
     }
 
 
-    private final ArrayList<Card> cards;
+    private final ArrayList<PokerServer.src.main.java.Deck.Card> cards;
 
-    public Hand(ArrayList<Card> cards){
+    public Hand(ArrayList<PokerServer.src.main.java.Deck.Card> cards){
         this.cards = cards;
     }
 
-    public ArrayList<Card> getCards(){
+    public ArrayList<PokerServer.src.main.java.Deck.Card> getCards(){
         return cards;
     }
 

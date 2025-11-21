@@ -1,21 +1,10 @@
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.IndexRange;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-
-
-import java.awt.*;
 
 public class GamePlayController {
 
@@ -39,5 +28,23 @@ public class GamePlayController {
 
     @FXML
     ImageView playerCard3 = new ImageView();
+
+    @FXML
+    Button drawButton = new Button();
+
+    @FXML
+    Button resetButton = new Button();
+
+    @FXML
+    ListView<String> messageHistory = new ListView<>();
+
+    @FXML
+    ComboBox<Integer> wagerList = new ComboBox<>();
+    void initializeWagers(){
+        wagerList.getItems().addAll(5, 10, 15, 20, 25);
+    }
+
+
+
 
 }

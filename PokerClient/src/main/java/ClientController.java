@@ -52,7 +52,7 @@ public class ClientController {
     public void joinMethod(ActionEvent e) throws IOException{
         try{
             if(connectToServer()){
-                Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/welcomeScene.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/GamePlay.fxml"));
                 Scene welcomeScene = new Scene(root, 700,700);
 
                 welcomeScene.getStylesheets().add("/clientStyles/welcomeStyle.css");
