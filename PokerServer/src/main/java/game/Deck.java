@@ -1,10 +1,8 @@
-package PokerServer.src.main.java;
+package PokerServer.src.main.java.game;
 
-import javax.management.RuntimeErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import PokerServer.src.main.java.Card;
 
 public class Deck {
     private final ArrayList<Card> cards;

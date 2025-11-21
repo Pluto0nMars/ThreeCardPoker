@@ -1,3 +1,4 @@
+import PokerServer.src.main.java.PokerServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,6 @@ public class ServerMain extends Application {
     public void start(Stage primaryStage) {
         try {
             // Read file fxml and draw interface.
-
-
             ServerThread newThread = new ServerThread();
             newThread.start();
 
