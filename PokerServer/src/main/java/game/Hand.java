@@ -1,17 +1,9 @@
-package PokerServer.src.main.java;
+package PokerServer.src.main.java.game;
 
 import java.util.ArrayList;
 
 
 public class Hand {
-    public enum Handrank{
-        STRAIGHTFLUSH,
-        THREEOFAKIND,
-        STRAIGHT,
-        FLUSH,
-        PAIR;
-    }
-
 
     private final ArrayList<PokerServer.src.main.java.Deck.Card> cards;
 
