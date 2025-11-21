@@ -1,12 +1,8 @@
-package PokerServer.src.main.java.game;
+package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-<<<<<<< HEAD:PokerServer/src/main/java/Deck.java
-//import PokerServer.src.main.java.Deck.Card;
-=======
->>>>>>> fbb6b69d3a33d912b9474255f812ac35ea28ab85:PokerServer/src/main/java/game/Deck.java
 
 public class Deck {
     private final ArrayList<Card> cards;
@@ -55,51 +51,4 @@ public class Deck {
         }
         return hand;
     }
-<<<<<<< HEAD:PokerServer/src/main/java/Deck.java
-
-
-    public static class Card {
-
-        //https://www.geeksforgeeks.org/java/enum-in-java/
-        public enum Suit{
-            SPADES,
-            HEARTS,
-            DIAMONDS,
-            CLUBS;
-        }
-        public enum Rank{
-            TWO,
-            THREE,
-            FOUR,
-            FIVE,
-            SIX,
-            SEVEN,
-            EIGHT,
-            NINE,
-            TEN,
-            JACK,
-            QUEEN,
-            KING,
-            ACE;
-        }
-
-        private final Suit suit;
-        private final Rank rank;
-
-        public Card(Suit suit, Rank rank){
-            this.suit = suit;
-            this.rank = rank;
-        }
-
-        public Suit getSuit(){return suit;}
-        public Rank getRank(){return rank;}
-
-    //    @Override
-    //    String toString(){
-        String to_string(){
-            return rank + " of " + suit;
-        }
-    }
-=======
->>>>>>> fbb6b69d3a33d912b9474255f812ac35ea28ab85:PokerServer/src/main/java/game/Deck.java
 }

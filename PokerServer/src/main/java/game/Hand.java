@@ -1,17 +1,17 @@
-package PokerServer.src.main.java.game;
+package game;
 
 import java.util.ArrayList;
 
 
 public class Hand {
 
-    private final ArrayList<PokerServer.src.main.java.Deck.Card> cards;
+    private final ArrayList<Deck> cards;
 
-    public Hand(ArrayList<PokerServer.src.main.java.Deck.Card> cards){
+    public Hand(ArrayList<Deck> cards){
         this.cards = cards;
     }
 
-    public ArrayList<PokerServer.src.main.java.Deck.Card> getCards(){
+    public ArrayList<Deck> getCards(){
         return cards;
     }
 

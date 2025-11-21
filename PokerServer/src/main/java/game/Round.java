@@ -1,5 +1,4 @@
-package PokerServer.src.main.java.game;
-
+package game;
 /*
 A round has 1 connected client
 1 decks of cards

@@ -22,8 +22,6 @@ public class ServerGUIController implements Initializable {
     @FXML private HBox bottom;          //
     @FXML private TextField serverLogs;
 
-    private PokerServer pokerServer;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub`
