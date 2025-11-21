@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.BorderPane?>
+
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-
-
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="root"
@@ -32,11 +24,13 @@
                            promptText="Enter IP Address"
                            prefWidth="220"
                            prefHeight="30"
+                           text="localhost"
                 />
                 <TextField fx:id ="portTextField"
                            promptText="Enter Port Number"
                            prefWidth="220"
                            prefHeight="30"
+                           text="5555"
                 />
             </HBox>
             <Button fx:id="joinButton"
@@ -46,7 +40,5 @@
                     prefWidth="200"
             />
         </VBox>
-
     </center>
-
 </BorderPane>

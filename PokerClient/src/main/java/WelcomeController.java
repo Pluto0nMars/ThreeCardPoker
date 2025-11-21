@@ -39,7 +39,7 @@ public class WelcomeController {
             invalidWager.setTitle("Invalid Wager");
             invalidWager.setHeaderText(null);
             invalidWager.setContentText("Your wager is invalid!\n" +
-                                    "Your wager must be between $5 and $25");
+                    "Your wager must be between $5 and $25");
 
             invalidWager.showAndWait();
             System.out.println("Wager must be greater than 0");
