@@ -19,4 +19,6 @@ public class Card {
     public String getCardFile(){
         return rank + "_" + suit + ".png";
     }
+
+
 }

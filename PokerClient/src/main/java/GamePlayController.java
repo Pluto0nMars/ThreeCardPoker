@@ -7,11 +7,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
+import javafx.scene.control.Label;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 public class GamePlayController {
 
@@ -40,13 +42,19 @@ public class GamePlayController {
     Button drawButton;
 
     @FXML
-    Button resetButton;
+    Button playButton;
 
     @FXML
     ListView<String> messageHistory;
 
     @FXML
     ComboBox<Integer> wagerList;
+
+    @FXML
+    ComboBox<String> menu;
+
+    @FXML
+    Label winnings;
 
     private PokerClient client;
 
@@ -55,8 +63,10 @@ public class GamePlayController {
     }
 
 
-    void initializeWagers(){
+    void initializeWagersAndMenu(){
         wagerList.getItems().addAll(5, 10, 15, 20, 25);
+
+        menu.getItems().addAll("FRESH START", "NEW LOOK", "EXIT");
         // When the user selects a wager, draw cards
         wagerList.setOnAction(event -> {
             Integer wager = wagerList.getValue();
@@ -64,11 +74,18 @@ public class GamePlayController {
                 drawCards(wager);
             }
         });
+
+        menu.setOnAction(event->{
+            String choice = menu.getValue();
+            if(menu !=  null){
+                menuChoice(choice);
+            }
+        });
     }
 
     @FXML
     public void initialize() {
-        initializeWagers();
+        initializeWagersAndMenu();
     }
 
 
@@ -98,6 +115,13 @@ public class GamePlayController {
 
     }
 
+    public void menuChoice(String c){
+        if("EXIT".equals(c)){
+            Platform.exit();
+            System.exit(0);
+        }
+    }
+
     private void updateGUI(PokerInfo info) {
         messageHistory.getItems().add(info.getMessage());
     }
@@ -116,6 +140,16 @@ public class GamePlayController {
             }
         });
     }
+
+    public void updateHande(PokerInfo info){
+        ArrayList<Card> playerHand = info.getPlayerHand();
+        ArrayList<Card> dealerHand = info.getDealerHand();
+
+        setCardImage(playerCard1, playerHand.get(0).getImagePath());
+        setCardImage(playerCard2, playerHand.get(1).getImagePath());
+        setCardImage(playerCard3, playerHand.get(2).getImagePath());
+    }
+
 
 
 

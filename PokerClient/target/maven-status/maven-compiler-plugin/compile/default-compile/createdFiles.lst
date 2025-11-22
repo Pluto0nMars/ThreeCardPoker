@@ -1,6 +1,7 @@
 PokerInfo.class
 GamePlayController.class
-JavaFXTemplate.class
+Card.class
+PokerClient.class
 WelcomeController.class
 ClientController.class
-PokerClient.class
+JavaFXTemplate.class
