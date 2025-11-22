@@ -12,69 +12,89 @@
             fx:controller="GamePlayController"
             prefHeight="400.0" prefWidth="600.0">
     <center>
-        <VBox>
-            <HBox>
-                <ImageView fx:id="dealerCard1"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="POKER" style="-fx-font-size: 50px;
+                                        -fx-font-family: 'Lucida Console';
+                                        -fx-text-fill: #ffffe0;
+                                        -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="20">
+                <Pane fx:id="dealerCard1"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                     -fx-border-color: white;
+                     -fx-border-style: dashed;
+                     -fx-border-width: 3;" />
 
-                <ImageView fx:id="dealerCard2"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+                <Pane fx:id="dealerCard2"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                     -fx-border-color: white;
+                     -fx-border-style: dashed;
+                     -fx-border-width: 3;" />
 
-                <ImageView fx:id="dealerCard3"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+                <Pane fx:id="dealerCard3"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                     -fx-border-color: white;
+                     -fx-border-style: dashed;
+                     -fx-border-width: 3;" />
             </HBox>
 
-            <HBox>
-                <ImageView fx:id="playerCard1"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+            <HBox spacing="20" alignment="CENTER">
+                <Pane fx:id="playerCard1"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                         -fx-border-color: white;
+                         -fx-border-style: dashed;
+                         -fx-border-width: 3;"/>
 
-                <ImageView fx:id="playerCard2"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+                <Pane fx:id="playerCard2"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                      -fx-border-style: dashed;
+                     -fx-border-color: white;
+                     -fx-border-width: 3;" />
 
-                <ImageView fx:id="playerCard3"
-                           fitWidth="120"
-                           fitHeight="180"
-                           preserveRatio="true"
-                           style="-fx-background-color: black;
-                      -fx-border-color: white;
-                      -fx-border-width: 3;" />
+                <Pane fx:id="playerCard3"
+                      prefWidth="150"
+                      prefHeight="200"
+                      style="-fx-background-color: #778899;
+                     -fx-border-color: white;
+                     -fx-border-style: dashed;
+                     -fx-border-width: 3;" />
             </HBox>
-            <HBox>
-                <Button fx:id="drawButton"/>
-                <Button fx:id="resetButton"/>
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="drawButton"
+                        prefHeight="50"
+                        prefWidth="200"
+                        text="FOLD"/>
+
+                <Button fx:id="resetButton"
+                        prefHeight="50"
+                        prefWidth="200"
+                        text="RESET"
+                        style=" -fx-background-color: #48d1cc;"/>
             </HBox>
         </VBox>
     </center>
     <right>
-        <ListView fx:id="messageHistory"/>
+        <VBox prefWidth="350" alignment="CENTER">
+            <ListView fx:id="messageHistory" prefHeight="300"
+                      style="-fx-background-color: lightgrey;
+                      -fx-border-color: black;
+                      -fx-border-width: 2;"/>
+        </VBox>
     </right>
     <left>
-        <ComboBox fx:id="wagerList"/>
+        <ComboBox fx:id="wagerList" prefWidth="150"
+                  style="-fx-background-color: lightgrey;
+                  -fx-border-color: black;
+                  -fx-border-width: 2;"/>
     </left>
 
 

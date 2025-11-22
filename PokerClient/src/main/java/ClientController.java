@@ -54,8 +54,7 @@ public class ClientController {
             if(connectToServer()){
                 Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/GamePlay.fxml"));
                 Scene welcomeScene = new Scene(root, 700,700);
-
-                welcomeScene.getStylesheets().add("/clientStyles/welcomeStyle.css");
+                welcomeScene.getStylesheets().add("/clientStyles/gameplay.css");
                 Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 currentStage.setScene(welcomeScene);
             }

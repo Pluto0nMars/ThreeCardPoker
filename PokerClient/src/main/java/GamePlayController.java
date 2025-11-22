@@ -5,6 +5,7 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 public class GamePlayController {
 
@@ -12,37 +13,59 @@ public class GamePlayController {
     public BorderPane GameRoot;
 
     @FXML
-    ImageView dealerCard1 = new ImageView();
+    Pane dealerCard1;
 
     @FXML
-    ImageView dealerCard2 = new ImageView();
+    Pane dealerCard2;
 
     @FXML
-    ImageView dealerCard3 = new ImageView();
+    Pane dealerCard3;
 
     @FXML
-    ImageView playerCard1 = new ImageView();
+    Pane playerCard1;
 
     @FXML
-    ImageView playerCard2 = new ImageView();
+    Pane playerCard2;
 
     @FXML
-    ImageView playerCard3 = new ImageView();
+    Pane playerCard3;
 
     @FXML
-    Button drawButton = new Button();
+    Button drawButton;
 
     @FXML
-    Button resetButton = new Button();
+    Button resetButton;
 
     @FXML
-    ListView<String> messageHistory = new ListView<>();
+    ListView<String> messageHistory;
 
     @FXML
-    ComboBox<Integer> wagerList = new ComboBox<>();
+    ComboBox<Integer> wagerList;
+
+
     void initializeWagers(){
         wagerList.getItems().addAll(5, 10, 15, 20, 25);
+        // When the user selects a wager, draw cards
+        wagerList.setOnAction(event -> {
+            Integer wager = wagerList.getValue();
+            if (wager != null) {
+                drawCards(wager);
+            }
+        });
     }
+
+    @FXML
+    public void initialize() {
+        initializeWagers();
+    }
+
+
+    void drawCards(int wager){
+        System.out.println("Drawing cards using wager: " + wager);
+    }
+
+
+
 
 
 
