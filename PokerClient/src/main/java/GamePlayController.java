@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -6,6 +7,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class GamePlayController {
 
@@ -42,6 +48,12 @@ public class GamePlayController {
     @FXML
     ComboBox<Integer> wagerList;
 
+    private PokerClient client;
+
+    public void setClient(PokerClient client) {
+        this.client = client;
+    }
+
 
     void initializeWagers(){
         wagerList.getItems().addAll(5, 10, 15, 20, 25);
@@ -63,6 +75,48 @@ public class GamePlayController {
     void drawCards(int wager){
         System.out.println("Drawing cards using wager: " + wager);
     }
+
+    @FXML
+    public void handleFold(ActionEvent event)throws IOException {
+        if(client == null){
+            return;
+        }
+
+        PokerInfo playerInfo = new PokerInfo();
+        playerInfo.setMessage("Player folds");
+        playerInfo.setCurrentWager(wagerList.getValue());
+
+        try{
+            client.getOutputStream().writeObject(playerInfo);
+            client.getOutputStream().flush();
+        } catch (IOException e){
+            e.printStackTrace();
+
+        }
+
+
+
+    }
+
+    private void updateGUI(PokerInfo info) {
+        messageHistory.getItems().add(info.getMessage());
+    }
+
+
+    public void startListening(){
+        new Thread(()->{
+            try{
+                ObjectInputStream in = client.getInputStream();
+                while(true){
+                    PokerInfo info = (PokerInfo) in.readObject();
+                    Platform.runLater(()->updateGUI(info));
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+    }
+
 
 
 
