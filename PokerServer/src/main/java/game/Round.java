@@ -11,6 +11,8 @@ env variables:
   * outcome W or L
 */
 
+import java.util.ArrayList;
+
 public class Round {
     private Deck deck;
     private Hand clientHand;
@@ -42,8 +44,16 @@ public class Round {
         return clientHand;
     }
 
+    public ArrayList<Card> getClientHand_arrList() {
+        return clientHand.getCards();
+    }
+
     public Hand getServerHand() {
         return serverHand;
+    }
+
+    public ArrayList<Card> getServerHand_arrList() {
+        return serverHand.getCards();
     }
 
     public String getOutcome() {

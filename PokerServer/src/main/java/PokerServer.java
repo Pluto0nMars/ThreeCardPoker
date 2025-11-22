@@ -1,6 +1,9 @@
 //package PokerServer.src.main.java;
 
+import game.Hand;
 import game.Round;
+import game.ThreeCardLogic;
+import shared.PokerInfo;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,7 +15,7 @@ import java.util.function.Consumer;
 
 public class PokerServer {
     private ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
-    int count = 1;
+    int numClients = 0;
     private String host;
     private int port;
 
@@ -27,9 +30,9 @@ public class PokerServer {
             System.out.println("Server on port: " + port + " is waiting for client(s)!");
 
             while (true) {
-                ClientThread c = new ClientThread(serverSocket.accept(), count);
+                ClientThread c = new ClientThread(serverSocket.accept(), numClients);
                 clients.add(c);
-                System.out.println("client has connected to server: " + "client #" + count++);
+                System.out.println("client has connected to server: " + "client #" + numClients++);
                 c.start();
 
                 // need to replace this code with the round logic.
@@ -49,38 +52,90 @@ public class PokerServer {
     // I THINK this will be where we implement Dashboard and LOGIC of each clients game
     class ClientThread extends Thread{
         Socket connection;
-        int count;
         ObjectInputStream in;
         ObjectOutputStream out;
+        int clientNumber;
+        Round currRound;
+        int totalBalance;
 
         // constructor for a ClientThread
-        ClientThread(Socket s, int count){
+        ClientThread(Socket s, int number){
             this.connection = s;
-            this.count = count;
+            this.clientNumber = number;
+        }
+
+        private ArrayList<shared.game.Card> convertHand(ArrayList<game.Card> serverHand){
+            ArrayList<shared.game.Card> convertedHand = new ArrayList<>();
+            for (game.Card card : serverHand){
+                convertedHand.add(new shared.game.Card(card.getSuit(), card.getRank()));
+            }
+            return convertedHand;
         }
 
         public void run(){
-            // try to build IO stream to client
-            System.out.println("New client #: " + count);
+            System.out.println("New client #: " + clientNumber);
+
             try {
                 in = new ObjectInputStream(connection.getInputStream());
                 out = new ObjectOutputStream(connection.getOutputStream());
                 connection.setTcpNoDelay(true);
 
+                // putting it all together. might need to think about how to implement this
                 while (true){
-                    Object message = in.readObject(); // read object from client
-                    System.out.println("Client " + count + " sent: " + message);
+                    Object obj = in.readObject();
+                    if (!(obj instanceof PokerInfo)) continue;
 
-                    // Echo it back or respond with something
-                    out.writeObject("Server received: " + message);
+                    PokerInfo request = (PokerInfo) obj;
+                    PokerInfo response = new PokerInfo();
+
+                    switch(request.getAction()){
+                        case PLACE_BET:
+                            currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
+                            response.setMessage("Cards dealt! Make your move!");
+                            break;
+
+                        case PLAY:
+                            int playerScore = ThreeCardLogic.rankHand(currRound.getClientHand().getCards());
+                            int serverScore = ThreeCardLogic.rankHand(currRound.getServerHand().getCards());
+                            String outcome;
+                            int payout;
+
+//                            NOTE
+                            // add different payout logic maybe
+                            if (playerScore > 0 && playerScore > serverScore){
+                                outcome = "WIN";
+                                payout = currRound.getAnteWager() * 2;
+                            }
+                            else if (playerScore == serverScore){
+                                outcome = "DRAW";
+                                payout = 0;
+                            }
+                            else {
+                                outcome = "LOSE";
+                                payout = -currRound.getAnteWager();
+                            }
+                            totalBalance += payout;
+                            //currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
+                            response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
+                            response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
+                            response.setMessage("You " + outcome + "! Payout: " + payout);
+                            response.setTotBalance(totalBalance);
+                            break;
+                        case FOLD:
+                            response.setMessage("You folded!");
+                            break;
+                        case QUIT:
+                            this.connection.close();
+                            break;
+                    }
+                    out.writeObject(response);
+                    out.flush();
                 }
             }
             catch(Exception e) {
                 System.out.println("Streams not open");
             }
         }
-
-
     }
 
 //    public static void main(String[] args){
