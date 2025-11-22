@@ -36,19 +36,29 @@ public class Deck {
     }
 
     // deals 3 cards
-    public List<Card> hand(int n){
-        List<Card> hand = new ArrayList<>();
+    public ArrayList<Card> hand(int n){
+        ArrayList<Card> hand = new ArrayList<>();
         for(int i=0; i<n; i++){
-            hand.add(deal());
+            Card rv = deal();
+            hand.add(rv);
+            cards.remove(rv);
         }
         return hand;
     }
 
-    public List<Card> hand3(){
-        List<Card> hand = new ArrayList<>();
+    public ArrayList<Card> hand3(){
+        ArrayList<Card> hand = new ArrayList<>();
         for(int i=0; i<3; i++){
-            hand.add(deal());
+            Card rv = deal();
+            hand.add(rv);
+            cards.remove(rv);
         }
         return hand;
+    }
+
+    public void printDeck(){
+        for (Card card : cards){
+            System.out.println(card.toString());
+        }
     }
 }

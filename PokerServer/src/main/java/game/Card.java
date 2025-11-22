@@ -13,13 +13,12 @@ public class Card {
     public char getSuit(){return suit;}
     public int getRank(){return rank;}
 
-//    @Override
-//    String toString(){
-    String to_string(){
+    @Override
+    public String toString(){
         return rank + " of " + suit;
     }
 
-    String getCardFile(){
+    public String getCardFile(){
         return rank + "_" + suit + ".png";
     }
 }

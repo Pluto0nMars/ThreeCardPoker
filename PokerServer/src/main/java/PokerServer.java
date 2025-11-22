@@ -1,5 +1,7 @@
 //package PokerServer.src.main.java;
 
+import game.Round;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -29,6 +31,14 @@ public class PokerServer {
                 clients.add(c);
                 System.out.println("client has connected to server: " + "client #" + count++);
                 c.start();
+
+                // need to replace this code with the round logic.
+                // not sure how to send the GUI element values from client to server
+                // pseudo sudo code
+//                anteAmount = anteBox.value
+//                 bet = betBox.value
+
+                // Round currRound = new Round(...)
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

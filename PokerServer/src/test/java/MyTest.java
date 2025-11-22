@@ -1,8 +1,6 @@
 
 import static org.junit.jupiter.api.Assertions.*;
-import PokerServer.src.main.java.game.Card;
-import PokerServer.src.main.java.game.Deck;
-import PokerServer.src.main.java.game.ThreeCardLogic;
+import game.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,6 +49,20 @@ class MyTest {
         ArrayList<Card> hand = DummyData.createPairdeck();
         assertEquals(1, ThreeCardLogic.rankHand(hand));
     }
+
+//    @Test
+//    void Deck_pullCards(){
+//
+//        Hand clientHand = new Hand(deck.hand3());
+//        Hand serverHand = new Hand(deck.hand3());
+//
+//        clientHand.printHand();
+//        serverHand.printHand();
+//        System.out.println("\n\n");
+//
+//        deck.printDeck();
+//
+//    }
 
 
     public static class DummyData {
