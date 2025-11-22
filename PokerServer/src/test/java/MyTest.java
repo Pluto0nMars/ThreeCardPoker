@@ -50,6 +50,27 @@ class MyTest {
         assertEquals(1, ThreeCardLogic.rankHand(hand));
     }
 
+    @Test
+    void Card_GetFilename_AceSpade(){
+        Card c1 = new Card('S', 14);
+        assertEquals("ace_of_spades.png", c1.getCardFile());
+    }
+    @Test
+    void Card_GetFilename_2Clubs(){
+        Card c1 = new Card('C', 2);
+        assertEquals("2_of_clubs.png", c1.getCardFile());
+    }
+    @Test
+    void Card_GetFilename_KingHearts(){
+        Card c1 = new Card('H', 13);
+        assertEquals("king_of_hearts.png", c1.getCardFile());
+    }
+    @Test
+    void Card_GetFilename_7Diamonds(){
+        Card c1 = new Card('D', 7);
+        assertEquals("7_of_diamonds.png", c1.getCardFile());
+    }
+
 //    @Test
 //    void Deck_pullCards(){
 //
@@ -63,6 +84,9 @@ class MyTest {
 //        deck.printDeck();
 //
 //    }
+
+
+
 
 
     public static class DummyData {

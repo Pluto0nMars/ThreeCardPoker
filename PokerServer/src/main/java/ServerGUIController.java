@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.HBox;
@@ -41,6 +42,8 @@ public class ServerGUIController implements Initializable {
         // maybe needs to be recursive to end all clients.... or we can just shut down the server?
         endServer.setDisable(true);
         startServer.setText("Server Ended");
+        Platform.exit();
+        System.exit(0);
     }
 
 }

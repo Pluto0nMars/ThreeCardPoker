@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="GamePlayController"
@@ -95,13 +90,14 @@
                 <Button fx:id="drawButton"
                         prefHeight="50"
                         prefWidth="200"
-                        text="FOLD"/>
+                        text="FOLD" />
+<!--                        //onAction="#handleFoldAlex" />-->
 
                 <Button fx:id="playButton"
                         prefHeight="50"
                         prefWidth="200"
-                        text="PLAY"
-                        style=" -fx-background-color: #48d1cc;"/>
+                        text="PLAY" />
+<!--                        style=" -fx-background-color: #48d1cc;" />-->
             </HBox>
         </VBox>
     </center>
@@ -122,12 +118,24 @@
     <left>
         <VBox spacing="30" style="-fx-padding: 10;">
             <VBox>
-                <Label text="PICK WAGER($):"
+                <Label text="PICK ANTE BET($):"
                        style="-fx-background-color: transparent;
                       -fx-font-family: 'Lucida Console';
                       -fx-font-size: 24px;"/>
 
-                <ComboBox fx:id="wagerList" prefWidth="200"
+                <ComboBox fx:id="anteBetList" prefWidth="200"
+                          style="-fx-background-color: lightgrey;
+                          -fx-font-size: 16px;
+                          -fx-border-color: black;
+                          -fx-border-width: 2;"
+                          promptText="wager $(5-25)"/>
+
+                <Label text="PICK PAIR PLUS($):"
+                       style="-fx-background-color: transparent;
+                      -fx-font-family: 'Lucida Console';
+                      -fx-font-size: 24px;"/>
+
+                <ComboBox fx:id="pairPlusBetList" prefWidth="200"
                           style="-fx-background-color: lightgrey;
                           -fx-font-size: 16px;
                           -fx-border-color: black;

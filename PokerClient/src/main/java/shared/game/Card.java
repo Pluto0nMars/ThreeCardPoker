@@ -1,15 +1,22 @@
-public class Card {
+package shared.game;
 
+import java.io.Serializable;
+
+public class Card implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private char suit;
     private int rank;
 
-    public Card(char suit, int rank){
+    public Card(char suit,  int rank){
         this.suit = suit;
         this.rank = rank;
     }
 
     public char getSuit(){return suit;}
     public int getRank(){return rank;}
+    public void setSuit(char suit){this.suit = suit;}
+    public void setRank(int rank){this.rank = rank;}
 
     @Override
     public String toString(){
@@ -20,16 +27,16 @@ public class Card {
         String rankStr;
         String suitStr;
         if(11 == rank){
-           rankStr = "ace";
-        }
-        else if (12 == rank){
             rankStr = "jack";
         }
-        else if (13 == rank) {
+        else if (12 == rank){
             rankStr = "queen";
         }
-        else if(14 == rank){
+        else if (13 == rank) {
             rankStr = "king";
+        }
+        else if(14 == rank){
+            rankStr = "ace";
         }else{
             rankStr = Integer.toString(rank);
         }
@@ -46,10 +53,6 @@ public class Card {
         else{
             suitStr = "";
         }
-
-
-        return rankStr + "_" + suitStr + ".png";
+        return rankStr + "_of_" + suitStr + ".png";
     }
-
-
 }

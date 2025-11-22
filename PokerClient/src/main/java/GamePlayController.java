@@ -2,14 +2,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
-import javax.swing.*;
-import java.awt.*;
+import shared.*;
+import shared.game.Card;
+
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -48,7 +48,13 @@ public class GamePlayController {
     ListView<String> messageHistory;
 
     @FXML
-    ComboBox<Integer> wagerList;
+    ComboBox<Integer> anteBetList;
+
+    @FXML
+    ComboBox<Integer> pairPlusBetList;
+
+//    @FXML
+//    ComboBox<Integer> wagerList;
 
     @FXML
     ComboBox<String> menu;
@@ -64,14 +70,19 @@ public class GamePlayController {
 
 
     void initializeWagersAndMenu(){
-        wagerList.getItems().addAll(5, 10, 15, 20, 25);
+        // might need to change this to [5-25] cpntinuous
+        anteBetList.getItems().addAll(5, 10, 15, 20, 25);
+        pairPlusBetList.getItems().addAll(5, 10, 15, 20, 25);
 
         menu.getItems().addAll("FRESH START", "NEW LOOK", "EXIT");
+
         // When the user selects a wager, draw cards
-        wagerList.setOnAction(event -> {
-            Integer wager = wagerList.getValue();
-            if (wager != null) {
-                drawCards(wager);
+//                                                                          MIGHT WANT TO ONLY DO THIS ON PLAY BUTTON. BC NEED TO SEND PACKET TO SERVER
+        anteBetList.setOnAction(event -> {
+            Integer anteBet = anteBetList.getValue();
+            Integer pairPlusBet = pairPlusBetList.getValue();
+            if (anteBet != null) {
+                drawCards(anteBet);
             }
         });
 
@@ -101,7 +112,8 @@ public class GamePlayController {
 
         PokerInfo playerInfo = new PokerInfo();
         playerInfo.setMessage("Player folds");
-        playerInfo.setCurrentWager(wagerList.getValue());
+//        playerInfo.setCurrentWager(wagerList.getValue());
+        playerInfo.setAnteBet(anteBetList.getValue());
 
         try{
             client.getOutputStream().writeObject(playerInfo);
@@ -172,9 +184,40 @@ public class GamePlayController {
 
 
 
+    // improve this once gui gets updated
+    public void handlePlaceWager(){
+        if (client == null || anteBetList.getValue() == null) return;
 
+        PokerInfo info = new PokerInfo();
+        info.setAction(ClientAction.PLACE_BET);
+        info.setAnteBet(anteBetList.getValue());
+        //info.setPairPlusBet(...);
 
+        try{
+            client.getOutputStream().writeObject(info);
+            client.getOutputStream().flush();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    // improve this once gui gets updated
+    public void handleFoldAlex(){
+        if (client == null || anteBetList.getValue() == null) return;
 
+        PokerInfo info = new PokerInfo();
+        info.setAction(ClientAction.FOLD);
+        info.setAnteBet(anteBetList.getValue());
+        //info.setPairPlusBet(...);
+
+        try{
+            client.getOutputStream().writeObject(info);
+            client.getOutputStream().flush();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
