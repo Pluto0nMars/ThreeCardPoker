@@ -77,7 +77,7 @@ public class GamePlayController {
 
         menu.setOnAction(event->{
             String choice = menu.getValue();
-            if(menu !=  null){
+            if(choice !=  null){
                 menuChoice(choice);
             }
         });
@@ -119,6 +119,8 @@ public class GamePlayController {
         if("EXIT".equals(c)){
             Platform.exit();
             System.exit(0);
+        } else if ("NEW LOOK".equals(c)) {
+            GameRoot.setStyle("-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);");
         }
     }
 
@@ -141,15 +143,32 @@ public class GamePlayController {
         });
     }
 
-    public void updateHande(PokerInfo info){
+    public void updateHands(PokerInfo info){
         ArrayList<Card> playerHand = info.getPlayerHand();
         ArrayList<Card> dealerHand = info.getDealerHand();
 
-        setCardImage(playerCard1, playerHand.get(0).getImagePath());
-        setCardImage(playerCard2, playerHand.get(1).getImagePath());
-        setCardImage(playerCard3, playerHand.get(2).getImagePath());
+
+        setCardImage(playerCard1, playerHand.get(0), true);
+        setCardImage(playerCard2, playerHand.get(1), true);
+        setCardImage(playerCard3, playerHand.get(2), true);
     }
 
+    public void setCardImage(Pane cardPane, Card card, boolean faceUp){
+        cardPane.getChildren().clear();
+        String imagePath;
+        if(faceUp){
+            imagePath = "ClientStyles/png/" + card.getCardFile();
+        }
+        else{
+            imagePath =   "ClientStyles/png/card back red.png";
+        }
+
+        ImageView iv = new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream(imagePath)));
+        iv.setFitWidth(120);
+        iv.setFitHeight(180);
+        iv.setPreserveRatio(true);
+        cardPane.getChildren().add(iv);
+    }
 
 
 

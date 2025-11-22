@@ -17,7 +17,38 @@ public class Card {
     }
 
     public String getCardFile(){
-        return rank + "_" + suit + ".png";
+        String rankStr;
+        String suitStr;
+        if(11 == rank){
+           rankStr = "ace";
+        }
+        else if (12 == rank){
+            rankStr = "jack";
+        }
+        else if (13 == rank) {
+            rankStr = "queen";
+        }
+        else if(14 == rank){
+            rankStr = "king";
+        }else{
+            rankStr = Integer.toString(rank);
+        }
+
+        if('C' == suit){
+            suitStr = "clubs";
+        } else if ('S' == suit) {
+            suitStr = "spades";
+        } else if ('H' == suit) {
+            suitStr = "hearts";
+        } else if ('D' == suit) {
+            suitStr = "diamonds";
+        }
+        else{
+            suitStr = "";
+        }
+
+
+        return rankStr + "_" + suitStr + ".png";
     }
 
 
