@@ -62,6 +62,11 @@ public class GamePlayController {
     @FXML
     Label winnings;
 
+
+    private boolean newLookActive = false;
+    private final String originalStyle = "-fx-background-color: linear-gradient(to bottom right, #2e8b57,  #008000);";
+    private final String newLookStyle = "-fx-background-color: linear-gradient(to bottom right, #00bfff, #2a5298);";
+
     private PokerClient client;
 
     public void setClient(PokerClient client) {
@@ -134,7 +139,13 @@ public class GamePlayController {
             Platform.exit();
             System.exit(0);
         } else if ("NEW LOOK".equals(c)) {
-            GameRoot.setStyle("-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);");
+            if(newLookActive){
+                GameRoot.setStyle(originalStyle); // restore original
+                newLookActive = false;
+            } else {
+                GameRoot.setStyle(newLookStyle); // apply new look
+                newLookActive = true;
+            }
         }
     }
 
