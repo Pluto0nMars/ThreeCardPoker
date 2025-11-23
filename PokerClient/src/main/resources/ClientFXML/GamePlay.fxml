@@ -101,7 +101,6 @@
                         text="PLAY"
                         onAction="#handlePlay"
                 />
-<!--                        style=" -fx-background-color: #48d1cc;" />-->
             </HBox>
         </VBox>
     </center>
