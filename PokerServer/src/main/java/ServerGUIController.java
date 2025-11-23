@@ -23,26 +23,35 @@ public class ServerGUIController implements Initializable {
     @FXML private HBox bottom;          //
     @FXML private ListView<String> serverLogs;
 
-    private ServerMain serverMain = new ServerMain();
+//    private ServerMain serverMain = new ServerMain();
     private PokerServer server;
+
+    void setServer(PokerServer server){
+        this.server = server;
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub`
         VBox.setVgrow(middle, Priority.ALWAYS);
-        server = new PokerServer("localhost", 5555, message -> {
-            Platform.runLater(() -> {
-                serverLogs.getItems().add(message);
-                serverLogs.scrollTo(serverLogs.getItems().size() - 1);
-            });
-        });
+
+//        server = new PokerServer(
+//                "localhost",
+//                5555,
+//                message -> Platform.runLater(() ->serverLogs.getItems().add(message)),
+//                count -> Platform.runLater(() -> numClients.setText(count + " Players"))
+//        );
+//        new Thread(() -> server.run()).start();
     }
+
 
     @FXML
     public void startServerMethod()  {
         startServer.setDisable(true);
         startServer.setText("Server Started");
 //        serverMain.startServer();
-        new Thread(() -> server.run()).start();
+//        new Thread(() -> server.run()).start();
     }
 
     @FXML
@@ -50,8 +59,8 @@ public class ServerGUIController implements Initializable {
         // maybe needs to be recursive to end all clients.... or we can just shut down the server?
         endServer.setDisable(true);
         startServer.setText("Server Ended");
+        System.out.println("[SUCCESS] Server has closed.");
         Platform.exit();
         System.exit(0);
     }
-
 }

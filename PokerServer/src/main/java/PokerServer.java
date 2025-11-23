@@ -1,13 +1,11 @@
 //package PokerServer.src.main.java;
 
-import game.Hand;
 import game.Round;
 import game.ThreeCardLogic;
 import shared.PokerInfo;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,32 +17,31 @@ public class PokerServer {
     private String host;
     private int port;
     private Consumer<String> logCallback;
+    private Consumer<Integer> clientCountCallback;
 
 
-    public PokerServer(String host, int port, Consumer<String> logCallback){
+    public PokerServer(String host, int port, Consumer<String> logCallback, Consumer<Integer> clientCountCallback) {
         this.host = host;
         this.port = port;
         this.logCallback = logCallback;
+        this.clientCountCallback = clientCountCallback;
     }
 
 
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server on port: " + port + " is waiting for client(s)!");
+            System.out.println("[LOG] Server is waiting for client(s)...");
 
             while (true) {
-                ClientThread c = new ClientThread(serverSocket.accept(), numClients);
+                Socket socket = serverSocket.accept();
+                ClientThread c = new ClientThread(socket, numClients);
                 clients.add(c);
-                System.out.println("client has connected to server: " + "client #" + numClients++);
+
+                numClients++;
+                log("Client " + (numClients) + " connected to server: ");
+                updateClientCount();
+
                 c.start();
-
-                // need to replace this code with the round logic.
-                // not sure how to send the GUI element values from client to server
-                // pseudo sudo code
-//                anteAmount = anteBox.value
-//                 bet = betBox.value
-
-                // Round currRound = new Round(...)
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -53,7 +50,7 @@ public class PokerServer {
 
     // create our own Thread class that has built in methods we care about
     // I THINK this will be where we implement Dashboard and LOGIC of each clients game
-    class ClientThread extends Thread{
+    class ClientThread extends Thread {
         Socket connection;
         ObjectInputStream in;
         ObjectOutputStream out;
@@ -62,29 +59,27 @@ public class PokerServer {
         int totalBalance;
 
         // constructor for a ClientThread
-        ClientThread(Socket s, int number){
+        ClientThread(Socket s, int number) {
             this.connection = s;
             this.clientNumber = number;
         }
 
-        private ArrayList<shared.game.Card> convertHand(ArrayList<game.Card> serverHand){
+        private ArrayList<shared.game.Card> convertHand(ArrayList<game.Card> serverHand) {
             ArrayList<shared.game.Card> convertedHand = new ArrayList<>();
-            for (game.Card card : serverHand){
+            for (game.Card card : serverHand) {
                 convertedHand.add(new shared.game.Card(card.getSuit(), card.getRank()));
             }
             return convertedHand;
         }
 
-        public void run(){
-            System.out.println("New client #: " + clientNumber);
-
+        public void run() {
             try {
                 in = new ObjectInputStream(connection.getInputStream());
                 out = new ObjectOutputStream(connection.getOutputStream());
                 connection.setTcpNoDelay(true);
 
                 // putting it all together. might need to think about how to implement this
-                while (true){
+                while (true) {
                     Object obj = in.readObject();
 
                     if (!(obj instanceof PokerInfo)) continue;
@@ -92,7 +87,7 @@ public class PokerServer {
                     PokerInfo request = (PokerInfo) obj;
                     PokerInfo response = new PokerInfo();
 
-                    switch(request.getAction()){
+                    switch (request.getAction()) {
                         case PLACE_BET:
                             currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
                             response.setMessage("Cards dealt! Make your move!");
@@ -106,15 +101,13 @@ public class PokerServer {
 
 //                            NOTE
                             // add different payout logic maybe
-                            if (playerScore > 0 && playerScore > serverScore){
+                            if (playerScore > 0 && playerScore > serverScore) {
                                 outcome = "WIN";
                                 payout = currRound.getAnteWager() * 2;
-                            }
-                            else if (playerScore == serverScore){
+                            } else if (playerScore == serverScore) {
                                 outcome = "DRAW";
                                 payout = 0;
-                            }
-                            else {
+                            } else {
                                 outcome = "LOSE";
                                 payout = -currRound.getAnteWager();
                             }
@@ -130,28 +123,50 @@ public class PokerServer {
                             break;
                         case QUIT:
                             log("Client #" + clientNumber + " has quit.");
+                            clients.remove(this);
+                            updateClientCount();
                             connection.close();
-                            break;
+                            return;
                     }
                     out.writeObject(response);
                     out.flush();
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println("Streams not open");
             }
         }
     }
 
     private void log(String message) {
-        System.out.println(message); // always print for sanity
+//        System.out.println(message); // always print for sanity
         if (logCallback != null) {
             logCallback.accept(message); // send to GUI
         }
     }
 
+    private void updateClientCount() {
+        if (clientCountCallback != null) {
+            clientCountCallback.accept(numClients); // send to GUI
+        }
+    }
 
-//    public static void main(String[] args){
-//        new PokerServer().run();
-//    }
+    private void setLogCallback(Consumer<String> callback){
+        this.logCallback = callback;
+    }
+
+    private void setClientCountCallback(Consumer<Integer> callback){
+        this.clientCountCallback = callback;
+    }
+
+    private void clientConnected(){
+        numClients++;
+        log("Client " + (numClients) + " connected to server: ");
+        updateClientCount();
+    }
+
+    private void clientDisconneced(){
+        numClients--;
+        log("Client has quit.");
+        updateClientCount();
+    }
 }

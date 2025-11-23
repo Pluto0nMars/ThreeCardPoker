@@ -8,9 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.Socket;
+import java.util.function.Consumer;
 
 
 public class WelcomeController {
@@ -19,37 +19,34 @@ public class WelcomeController {
     @FXML private  TextField portTextField;
     @FXML private Button joinButton;
 
-//    private PokerClient client = new PokerClient();
-    private boolean connectToServer(){
-        try{
-            String ip = ipTextField.getText().trim();
-            int port = Integer.parseInt(portTextField.getText());
-            Socket socketClient = new Socket(ip, port);
-            System.out.println("Successful Connection!");
-            return true;
-        }catch (Exception e){
-
-            System.err.println("Connection failed: " + e.getMessage());
-            return false;
-        }
-//        client.connectToServer(ip, port);
-    }
+    private boolean serverRunning = false;
 
     private boolean startServer(){
         try{
             String ip = ipTextField.getText().trim();
             int port = Integer.parseInt(portTextField.getText());
 
+            // the main thread of the server. There is only 1 server every running
             new Thread( () -> {
                 try {
-                    PokerServer server = new PokerServer(ip, port);
+                    Consumer<String> logger = message -> {
+                        System.out.println("[LOG] " + message);
+                    };
+
+                    Consumer<Integer> clientCounter = count -> { };
+
+                    PokerServer server = new PokerServer(ip, port, logger, clientCounter);
+                    serverRunning = true;
                     server.run();
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
+                }finally {
+                    serverRunning = false;
                 }
             }).start();
 
-            System.out.println("Server started on " + ip + ":" + port);
+            System.out.println("[SUCCESS] Server started on " + ip + ":" + port);
             return true;
         }
         catch (Exception e) {
@@ -58,6 +55,10 @@ public class WelcomeController {
         }
     }
 
+    /*
+        When user clicks Join, we take them to another scene, the serverGUI/ dashboard. We load fxml file
+        @ Param : our button click event e
+     */
     public void joinMethod(ActionEvent e) throws IOException{
         try{
             if(startServer()){
