@@ -120,11 +120,7 @@ public class GamePlayController {
             client.getOutputStream().flush();
         } catch (IOException e){
             e.printStackTrace();
-
         }
-
-
-
     }
 
     public void menuChoice(String c){

@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.function.Consumer;
 
 
@@ -32,9 +32,7 @@ public class WelcomeController {
                     Consumer<String> logger = message -> {
                         System.out.println("[LOG] " + message);
                     };
-
                     Consumer<Integer> clientCounter = count -> { };
-
                     PokerServer server = new PokerServer(ip, port, logger, clientCounter);
                     serverRunning = true;
                     server.run();
@@ -60,17 +58,61 @@ public class WelcomeController {
         @ Param : our button click event e
      */
     public void joinMethod(ActionEvent e) throws IOException{
-        try{
-            if(startServer()){
-                Parent root = FXMLLoader.load(getClass().getResource("/FXML/ServerGUI.fxml"));
-                Scene welcomeScene = new Scene(root, 700,700);
+        try {
+            String ip = ipTextField.getText().trim();
+            int port = Integer.parseInt(portTextField.getText());
 
-                welcomeScene.getStylesheets().add("/styles/serverGUIstyle.css");
-                Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-                currentStage.setScene(welcomeScene);
-            }
-        } catch (Exception ex) {
-            System.err.println("Error Connecting: " + ex.getMessage());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/ServerGUI.fxml"));
+            Parent root = loader.load();
+
+            ServerGUIController controller = loader.getController();
+
+            PokerServer server = new PokerServer(
+                    ip,
+                    port,
+                    message -> Platform.runLater(() -> controller.serverLogs.getItems().add(message)),
+                    count -> Platform.runLater(() -> controller.numClients.setText(count + " Players"))
+            );
+
+            controller.setServer(server);
+
+            new Thread(() -> server.run()).start();
+
+            Scene dashboard = new Scene(root, 700,700);
+            dashboard.getStylesheets().add("/styles/serverGUIstyle.css");
+            Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            currentStage.setScene(dashboard);
         }
+        catch(Exception err){
+            System.err.println("Failed to start server: " + err.getMessage());
+        }
+
+
+//            if(startServer()){
+//                Parent root = FXMLLoader.load(getClass().getResource("/FXML/ServerGUI.fxml"));
+//                Scene welcomeScene = new Scene(root, 700,700);
+//
+//                welcomeScene.getStylesheets().add("/styles/serverGUIstyle.css");
+//                Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+//                currentStage.setScene(welcomeScene);
+//            }
+//        } catch (Exception ex) {
+//            System.err.println("Error Connecting: " + ex.getMessage());
     }
+
+
+//    public void joinMethod(ActionEvent e) throws IOException{
+//        try{
+//            if(startServer()){
+//                Parent root = FXMLLoader.load(getClass().getResource("/FXML/ServerGUI.fxml"));
+//                Scene welcomeScene = new Scene(root, 700,700);
+//
+//                welcomeScene.getStylesheets().add("/styles/serverGUIstyle.css");
+//                Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+//                currentStage.setScene(welcomeScene);
+//            }
+//        } catch (Exception ex) {
+//            System.err.println("Error Connecting: " + ex.getMessage());
+//        }
+//    }
 }

@@ -16,12 +16,13 @@ public class ServerGUIController implements Initializable {
     @FXML private BorderPane root2;
     @FXML private HBox top;             //
     @FXML private Button startServer;
-    @FXML private TextField numClients;
     @FXML private Button endServer;
     @FXML private HBox middle;          //
-    @FXML private ListView<String> gameLogs;
     @FXML private HBox bottom;          //
-    @FXML private ListView<String> serverLogs;
+
+    @FXML public TextField numClients;
+    @FXML public ListView<String> gameLogs;
+    @FXML public ListView<String> serverLogs;
 
 //    private ServerMain serverMain = new ServerMain();
     private PokerServer server;
