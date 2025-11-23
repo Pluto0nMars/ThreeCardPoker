@@ -1,6 +1,7 @@
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,16 +19,22 @@ public class ServerGUIController implements Initializable {
     @FXML private TextField numClients;
     @FXML private Button endServer;
     @FXML private HBox middle;          //
-    @FXML private TextField gameLogs;
+    @FXML private ListView<String> gameLogs;
     @FXML private HBox bottom;          //
-    @FXML private TextField serverLogs;
+    @FXML private ListView<String> serverLogs;
 
     private ServerMain serverMain = new ServerMain();
-
+    private PokerServer server;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub`
         VBox.setVgrow(middle, Priority.ALWAYS);
+        server = new PokerServer("localhost", 5555, message -> {
+            Platform.runLater(() -> {
+                serverLogs.getItems().add(message);
+                serverLogs.scrollTo(serverLogs.getItems().size() - 1);
+            });
+        });
     }
 
     @FXML
@@ -35,6 +42,7 @@ public class ServerGUIController implements Initializable {
         startServer.setDisable(true);
         startServer.setText("Server Started");
 //        serverMain.startServer();
+        new Thread(() -> server.run()).start();
     }
 
     @FXML

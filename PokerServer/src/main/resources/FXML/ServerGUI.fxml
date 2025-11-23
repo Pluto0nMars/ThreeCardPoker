@@ -29,8 +29,12 @@
                 <padding>
                     <Insets top="30" right="30" bottom="30" left="30"/>
                 </padding>
-    <!--            <TextField fx:id="gameLogs" promptText="Game Logs" editable="false" alignment="CENTER" prefWidth="300" prefHeight="100" maxWidth="930" maxHeight="200" HBox.hgrow="ALWAYS"/>-->
-                <TextField fx:id="gameLogs" promptText="Game Logs" editable="false" alignment="TOP_CENTER" prefWidth="930" prefHeight="300" VBox.vgrow="ALWAYS"/>
+
+
+                <Label text="Game Logs" alignment="CENTER"/>
+
+                <ListView fx:id="gameLogs" editable="false"
+                          prefWidth="930" prefHeight="300" />
             </VBox>
         </HBox>
     </center>
@@ -41,8 +45,13 @@
                 <padding>
                     <Insets top="30" right="30" bottom="30" left="30"/>
                 </padding>
-    <!--            <TextField fx:id="serverLogs" promptText="Server Logs" editable="false" alignment="CENTER" prefWidth="300" prefHeight="100" maxWidth="930" maxHeight="200" HBox.hgrow="ALWAYS"/>-->
-                <TextField fx:id="serverLogs" promptText="Server Logs" editable="false" alignment="TOP_CENTER" prefWidth="930" prefHeight="300" />
+
+                <!-- Label for Server Logs -->
+                <Label text="Server Logs" alignment="CENTER"/>
+
+                <!-- ListView instead of TextField -->
+                <ListView fx:id="serverLogs" editable="false"
+                          prefWidth="930" prefHeight="300" />
             </VBox>
         </HBox>
     </bottom>

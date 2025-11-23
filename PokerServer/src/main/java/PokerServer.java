@@ -18,10 +18,13 @@ public class PokerServer {
     int numClients = 0;
     private String host;
     private int port;
+    private Consumer<String> logCallback;
 
-    public PokerServer(String host, int port){
+
+    public PokerServer(String host, int port, Consumer<String> logCallback){
         this.host = host;
         this.port = port;
+        this.logCallback = logCallback;
     }
 
 
@@ -83,6 +86,7 @@ public class PokerServer {
                 // putting it all together. might need to think about how to implement this
                 while (true){
                     Object obj = in.readObject();
+
                     if (!(obj instanceof PokerInfo)) continue;
 
                     PokerInfo request = (PokerInfo) obj;
@@ -125,7 +129,8 @@ public class PokerServer {
                             response.setMessage("You folded!");
                             break;
                         case QUIT:
-                            this.connection.close();
+                            log("Client #" + clientNumber + " has quit.");
+                            connection.close();
                             break;
                     }
                     out.writeObject(response);
@@ -138,10 +143,15 @@ public class PokerServer {
         }
     }
 
+    private void log(String message) {
+        System.out.println(message); // always print for sanity
+        if (logCallback != null) {
+            logCallback.accept(message); // send to GUI
+        }
+    }
+
+
 //    public static void main(String[] args){
 //        new PokerServer().run();
 //    }
 }
-
-
-

@@ -11,6 +11,22 @@ keep it trivial for now
     -fx-border-color: #ffffff;
 }
 
+.list-view{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(0, 0, 0, 0.73);
+    -fx-border-color: #ffffff;
+}
+
+.label{
+    -fx-background-color: transparent;
+     -fx-text-fill: black;
+     -fx-font-size: 14px;
+      -fx-font-weight: normal;
+}
+
 .text-field{
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 14px;
