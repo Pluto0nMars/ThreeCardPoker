@@ -30,9 +30,10 @@
 
 }
 
-.transparent-label {
+.label {
       -fx-background-color: transparent;
       -fx-font-family: Lucida Console;
+      -fx-text-fill: white;
 }
 
 .combo-box {

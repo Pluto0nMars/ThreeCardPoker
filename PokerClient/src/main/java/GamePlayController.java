@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import shared.*;
 import shared.game.Card;
 
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -101,7 +101,13 @@ public class GamePlayController {
 
 
     void drawCards(int wager){
-        System.out.println("Drawing cards using wager: " + wager);
+        setCardImage(dealerCard1, new Card('H', 5), false);
+        setCardImage(dealerCard2, new Card('S', 11), false);
+        setCardImage(dealerCard3, new Card('D', 2), false);
+
+        setCardImage(playerCard1, new Card('H', 5), true);
+        setCardImage(playerCard2, new Card('S', 11), true);
+        setCardImage(playerCard3, new Card('D', 2), true);
     }
 
     @FXML
@@ -143,7 +149,10 @@ public class GamePlayController {
                 ObjectInputStream in = client.getInputStream();
                 while(true){
                     PokerInfo info = (PokerInfo) in.readObject();
-                    Platform.runLater(()->updateGUI(info));
+                    Platform.runLater(() -> {
+                        updateGUI(info);
+                        updateHands(info);
+                    });
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -155,33 +164,55 @@ public class GamePlayController {
         ArrayList<Card> playerHand = info.getPlayerHand();
         ArrayList<Card> dealerHand = info.getDealerHand();
 
+        setCardImage(dealerCard1, dealerHand.get(0), false);
+        setCardImage(dealerCard2, dealerHand.get(1), false);
+        setCardImage(dealerCard3, dealerHand.get(2), false);
 
         setCardImage(playerCard1, playerHand.get(0), true);
         setCardImage(playerCard2, playerHand.get(1), true);
         setCardImage(playerCard3, playerHand.get(2), true);
     }
 
+    public void flipDealer(PokerInfo info){
+        ArrayList<Card> dealerHand = info.getDealerHand();
+
+        setCardImage(dealerCard1, dealerHand.get(0), true);
+        setCardImage(dealerCard2, dealerHand.get(1), true);
+        setCardImage(dealerCard3, dealerHand.get(2), true);
+
+    }
+
     public void setCardImage(Pane cardPane, Card card, boolean faceUp){
         cardPane.getChildren().clear();
+
         String imagePath;
         if(faceUp){
-            imagePath = "ClientStyles/png/" + card.getCardFile();
-        }
-        else{
-            imagePath =   "ClientStyles/png/card back red.png";
+            imagePath = "/ClientStyles/png/" + card.getCardFile();
+            cardPane.setStyle("-fx-background-color: white;");
+        } else {
+            imagePath = "/ClientStyles/png/back_card.png";
+            cardPane.setStyle("-fx-background-color: white;");
         }
 
-        ImageView iv = new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream(imagePath)));
-        iv.setFitWidth(120);
-        iv.setFitHeight(180);
+        var stream = getClass().getResourceAsStream(imagePath);
+        if (stream == null) {
+            System.out.println("Could NOT load: " + imagePath);
+            return;
+        }
+
+        ImageView iv = new ImageView(new javafx.scene.image.Image(stream));
+        iv.setFitWidth(150);
+        iv.setFitHeight(200);
         iv.setPreserveRatio(true);
         cardPane.getChildren().add(iv);
+
     }
 
 
 
     // improve this once gui gets updated
-    public void handlePlaceWager(){
+    @FXML
+    public void handlePlaceWager(ActionEvent event) throws IOException{
         if (client == null || anteBetList.getValue() == null) return;
 
         PokerInfo info = new PokerInfo();
@@ -196,6 +227,8 @@ public class GamePlayController {
         catch (Exception e){
             e.printStackTrace();
         }
+
+        drawCards(anteBetList.getValue());
     }
 
     // improve this once gui gets updated
