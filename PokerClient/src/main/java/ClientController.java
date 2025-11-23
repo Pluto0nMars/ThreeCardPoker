@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+
 
 public class ClientController {
     @FXML
@@ -29,13 +31,12 @@ public class ClientController {
 
     private PokerClient client = new PokerClient();
 
-    private boolean connectToServer(){
 
+    private boolean connectToServer(){
         try{
             String ip = ipTextField.getText().trim();
             int port = Integer.parseInt(portTextField.getText());
-            Socket socketClient = new Socket(ip, port);
-
+            client.connectToServer(ip, port);
             System.out.println("Successful Connection!");
             return true;
 
@@ -49,10 +50,33 @@ public class ClientController {
 
     }
 
+//    public void joinMethod(ActionEvent e) throws IOException{
+//        try{
+//            if(connectToServer()){
+//                Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/GamePlay.fxml"));
+//                Scene welcomeScene = new Scene(root, 700,700);
+//                welcomeScene.getStylesheets().add("/clientStyles/gameplay.css");
+//                Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+//                currentStage.setScene(welcomeScene);
+//            }
+//        } catch (Exception ex) {
+//            System.err.println("Error Connecting: " + ex.getMessage());
+//        }
+//    }
+
+
     public void joinMethod(ActionEvent e) throws IOException{
         try{
             if(connectToServer()){
-                Parent root = FXMLLoader.load(getClass().getResource("/ClientFXML/GamePlay.fxml"));
+                //load and get controller
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ClientFXML/GamePlay.fxml"));
+                Parent root = loader.load();
+
+                // add client into controller and start listening to server messages
+                GamePlayController controller = loader.getController();
+                controller.setClient(client);
+                controller.startListening();
+
                 Scene welcomeScene = new Scene(root, 700,700);
                 welcomeScene.getStylesheets().add("/clientStyles/gameplay.css");
                 Stage currentStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -62,6 +86,4 @@ public class ClientController {
             System.err.println("Error Connecting: " + ex.getMessage());
         }
     }
-
-
 }

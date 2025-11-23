@@ -39,7 +39,7 @@ public class GamePlayController {
     Pane playerCard3;
 
     @FXML
-    Button drawButton;
+    Button foldButton;
 
     @FXML
     Button playButton;
@@ -115,29 +115,26 @@ public class GamePlayController {
         setCardImage(playerCard3, new Card('D', 2), true);
     }
 
-    @FXML
-    public void handleFold(ActionEvent event)throws IOException {
-        if(client == null){
-            return;
-        }
-
-        PokerInfo playerInfo = new PokerInfo();
-        playerInfo.setMessage("Player folds");
-//        playerInfo.setCurrentWager(wagerList.getValue());
-        playerInfo.setAnteBet(anteBetList.getValue());
-
-        try{
-            client.getOutputStream().writeObject(playerInfo);
-            client.getOutputStream().flush();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
     public void menuChoice(String c){
         if("EXIT".equals(c)){
+            if(client == null){
+                return;
+            }
+
+            PokerInfo info = new PokerInfo();
+            info.setAction(ClientAction.QUIT);
+            info.setMessage("Player quit.");
+
+            try{
+                client.getOutputStream().writeObject(info);
+                client.getOutputStream().flush();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
             Platform.exit();
             System.exit(0);
+
         } else if ("NEW LOOK".equals(c)) {
             if(newLookActive){
                 GameRoot.setStyle(originalStyle); // restore original
@@ -161,6 +158,7 @@ public class GamePlayController {
                 while(true){
                     PokerInfo info = (PokerInfo) in.readObject();
                     Platform.runLater(() -> {
+                        System.out.println("Received message: " + info.getMessage()); // <- DEBUG
                         updateGUI(info);
                         updateHands(info);
                     });
@@ -224,13 +222,20 @@ public class GamePlayController {
     // improve this once gui gets updated
     @FXML
     public void handlePlaceWager(ActionEvent event) throws IOException{
+        System.out.println("HANDLE WAGER button clicked!");
         if (client == null || anteBetList.getValue() == null) return;
 
         PokerInfo info = new PokerInfo();
         info.setAction(ClientAction.PLACE_BET);
-        info.setAnteBet(anteBetList.getValue());
-        //info.setPairPlusBet(...);
+        if (anteBetList.getValue() == null){
+            info.setAnteBet(5);
+        }else{info.setAnteBet(anteBetList.getValue());}
+        if (pairPlusBetList.getValue() == null){
+            info.setPairPlusBet(5);
+        }else{info.setPairPlusBet(pairPlusBetList.getValue());}
+        info.setMessage("Player bets");
 
+        System.out.println(info.getAction() +  info.getMessage() + info.getPlayerHand() + info.getDealerHand() + info.getPairPlusBet() + info.getAnteBet());
         try{
             client.getOutputStream().writeObject(info);
             client.getOutputStream().flush();
@@ -242,20 +247,62 @@ public class GamePlayController {
         drawCards(anteBetList.getValue());
     }
 
-    // improve this once gui gets updated
-    public void handleFoldAlex(){
-        if (client == null || anteBetList.getValue() == null) return;
+    @FXML
+    public void handlePlay(ActionEvent event)throws IOException {
+        System.out.println("PLAY button clicked!");
+        if(client == null){
+            return;
+        }
 
         PokerInfo info = new PokerInfo();
-        info.setAction(ClientAction.FOLD);
-        info.setAnteBet(anteBetList.getValue());
-        //info.setPairPlusBet(...);
+        info.setAction(ClientAction.PLAY);
+        // check on null conditions
+        if (anteBetList.getValue() == null){
+            info.setAnteBet(5);
+        }else{info.setAnteBet(anteBetList.getValue());}
+
+        if (pairPlusBetList.getValue() == null){
+            info.setPairPlusBet(5);
+        }else{info.setPairPlusBet(pairPlusBetList.getValue());}
+        info.setMessage("Player plays");
+
+        System.out.println(info.getAction() +  info.getMessage() + info.getPlayerHand() + info.getDealerHand() + info.getPairPlusBet() + info.getAnteBet());
 
         try{
             client.getOutputStream().writeObject(info);
             client.getOutputStream().flush();
+        } catch (IOException e){
+            e.printStackTrace();
         }
-        catch (Exception e){
+    }
+
+    @FXML
+    public void handleFold(ActionEvent event)throws IOException {
+        System.out.println("FOLD button clicked!");
+        if(client == null){
+            return;
+        }
+
+        PokerInfo info = new PokerInfo();
+        // check on null conditions
+        info.setAction(ClientAction.FOLD);
+        if (anteBetList.getValue() == null){
+            info.setAnteBet(5);
+        }else{info.setAnteBet(anteBetList.getValue());}
+
+        if (pairPlusBetList.getValue() == null){
+            info.setPairPlusBet(5);
+        }else{info.setPairPlusBet(pairPlusBetList.getValue());}
+
+        info.setMessage("Player folds");
+
+        System.out.println(info.getAction() +  info.getMessage() + info.getPlayerHand() + info.getDealerHand() + info.getPairPlusBet() + info.getAnteBet());
+
+        try{
+            System.out.println("writing to server");
+            client.getOutputStream().writeObject(info);
+            client.getOutputStream().flush();
+        } catch (IOException e){
             e.printStackTrace();
         }
     }

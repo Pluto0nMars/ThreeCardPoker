@@ -88,16 +88,19 @@
                      -fx-border-width: 3;" />
             </HBox>
             <HBox spacing="20" alignment="CENTER">
-                <Button fx:id="drawButton"
+                <Button fx:id="foldButton"
                         prefHeight="50"
                         prefWidth="200"
-                        text="FOLD" />
-<!--                        //onAction="#handleFoldAlex" />-->
+                        text="FOLD"
+                        onAction="#handleFold"
+                />
 
                 <Button fx:id="playButton"
                         prefHeight="50"
                         prefWidth="200"
-                        text="PLAY" />
+                        text="PLAY"
+                        onAction="#handlePlay"
+                />
 <!--                        style=" -fx-background-color: #48d1cc;" />-->
             </HBox>
         </VBox>
@@ -148,15 +151,6 @@
                 <Label fx:id="winnings" text="WINNINGS: $0"
                        style="-fx-font-size: 20px;"/>
             </HBox>
-
         </VBox>
-
     </left>
-
-
-
-
-
-
-
 </BorderPane>

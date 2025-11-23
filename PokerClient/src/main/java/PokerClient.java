@@ -33,7 +33,6 @@ public class PokerClient {
     public  ObjectInputStream getInputStream(){
         return in;
     }
-
     public ObjectOutputStream getOutputStream(){
         return out;
     }

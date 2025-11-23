@@ -74,14 +74,14 @@ public class PokerServer {
 
         public void run() {
             try {
-                in = new ObjectInputStream(connection.getInputStream());
                 out = new ObjectOutputStream(connection.getOutputStream());
+                out.flush();
+                in = new ObjectInputStream(connection.getInputStream());
                 connection.setTcpNoDelay(true);
 
                 // putting it all together. might need to think about how to implement this
                 while (true) {
                     Object obj = in.readObject();
-
                     if (!(obj instanceof PokerInfo)) continue;
 
                     PokerInfo request = (PokerInfo) obj;
@@ -91,6 +91,7 @@ public class PokerServer {
                         case PLACE_BET:
                             currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
                             response.setMessage("Cards dealt! Make your move!");
+                            log("Cards dealt for client #" + clientNumber + "! Make your move!\"");
                             break;
 
                         case PLAY:
@@ -116,6 +117,7 @@ public class PokerServer {
                             response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
                             response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
                             response.setMessage("You " + outcome + "! Payout: " + payout);
+                            log("Client #" + clientNumber + out + "\'s.");
                             response.setTotBalance(totalBalance);
                             break;
                         case FOLD:
@@ -132,7 +134,7 @@ public class PokerServer {
                     out.flush();
                 }
             } catch (Exception e) {
-                System.out.println("Streams not open");
+                System.out.println("Streams not open for client #" + clientNumber);
             }
         }
     }
