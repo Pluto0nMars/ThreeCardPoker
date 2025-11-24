@@ -13,6 +13,7 @@ public class PokerClient {
             System.out.println("Connected to server at:" + ipAddress + ":" + portNum);
 
             out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
             in = new ObjectInputStream(socket.getInputStream());
         }catch (IOException e){
             System.err.println("Oops, Error connection to server :" + e.getMessage());
