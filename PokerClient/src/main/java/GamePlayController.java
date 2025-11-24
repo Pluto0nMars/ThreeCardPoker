@@ -14,6 +14,10 @@ import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 
 public class GamePlayController {
 
@@ -42,6 +46,9 @@ public class GamePlayController {
     Button foldButton;
 
     @FXML
+    Button placeBet;
+
+    @FXML
     Button playButton;
 
     @FXML
@@ -66,6 +73,10 @@ public class GamePlayController {
 
     private ArrayList<Card> dealerHand;
 
+    private boolean handInProgress = false;
+
+
+
 
     int totalWinnings = 0;
 
@@ -73,7 +84,14 @@ public class GamePlayController {
     private boolean newLookActive = false;
     private final String originalStyle = "-fx-background-color: linear-gradient(to bottom right, #2e8b57,  #008000);";
     private final String newLookStyle = "-fx-background-color: linear-gradient(to bottom right, #00bfff, #2a5298);";
-
+    private final String regularPaneStyle ="-fx-background-color: #008000;" +
+                                 "-fx-border-color: white;" +
+                                 "-fx-border-style: dashed;" +
+                                   "-fx-border-width: 3;";
+    private final String newLookPaneStyle ="-fx-background-color: #00bfff;" +
+            "-fx-border-color: white;" +
+            "-fx-border-style: dashed;" +
+            "-fx-border-width: 3;";
     private PokerClient client;
 
     public void setClient(PokerClient client) {
@@ -94,10 +112,11 @@ public class GamePlayController {
         anteBetList.setOnAction(event -> {
             Integer anteBet = anteBetList.getValue();
             Integer pairPlusBet = pairPlusBetList.getValue();
-            if (anteBet != null) {
+
                 updateButtonStates();
-                drawCards(anteBet);
-            }
+                //drawCards(anteBet);
+                placeBet.setDisable(false);
+
         });
 
         menu.setOnAction(event -> {
@@ -114,6 +133,30 @@ public class GamePlayController {
         updateButtonStates();
     }
 
+    private void fadeIn(Pane pane, double delayMs) {
+        FadeTransition ft = new FadeTransition(Duration.millis(300), pane);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.setDelay(Duration.millis(delayMs));
+        ft.play();
+    }
+
+    private void flipCardAnimation(Pane pane, Runnable afterHalfFlip) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(150), pane);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(150), pane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        fadeOut.setOnFinished(e -> {
+            afterHalfFlip.run();
+            fadeIn.play();
+        });
+
+        fadeOut.play();
+    }
 
     void drawCards(int wager) {
         Deck deck = new Deck();
@@ -122,13 +165,23 @@ public class GamePlayController {
 
 
         setCardImage(dealerCard1, dealerHand.get(0), false);
-        setCardImage(dealerCard2, dealerHand.get(1), false);
-        setCardImage(dealerCard3, dealerHand.get(2), false);
+        fadeIn(dealerCard1, 0);
 
+        setCardImage(dealerCard2, dealerHand.get(1), false);
+        fadeIn(dealerCard2, 150);
+
+        setCardImage(dealerCard3, dealerHand.get(2), false);
+        fadeIn(dealerCard3, 300);
 
         setCardImage(playerCard1, playerHand.get(0), true);
+        fadeIn(playerCard1, 450);
+
         setCardImage(playerCard2, playerHand.get(1), true);
+        fadeIn(playerCard2, 600);
+
         setCardImage(playerCard3, playerHand.get(2), true);
+        fadeIn(playerCard3, 750);
+
 
     }
 
@@ -160,6 +213,8 @@ public class GamePlayController {
                 GameRoot.setStyle(newLookStyle); // apply new look
                 newLookActive = true;
             }
+        } else if ("FRESH START".equals(c)) {
+            freshStart();
         }
     }
 
@@ -202,10 +257,27 @@ public class GamePlayController {
     public void flipDealer(PokerInfo info) {
         ArrayList<Card> dealerHand = info.getDealerHand();
 
-        setCardImage(dealerCard1, dealerHand.get(0), true);
-        setCardImage(dealerCard2, dealerHand.get(1), true);
-        setCardImage(dealerCard3, dealerHand.get(2), true);
 
+        flipCardAnimation(dealerCard1, () ->
+                setCardImage(dealerCard1, dealerHand.get(0), true)
+        );
+
+
+        PauseTransition p2 = new PauseTransition(Duration.millis(150));
+        p2.setOnFinished(e ->
+                flipCardAnimation(dealerCard2, () ->
+                        setCardImage(dealerCard2, dealerHand.get(1), true)
+                )
+        );
+        p2.play();
+
+        PauseTransition p3 = new PauseTransition(Duration.millis(300));
+        p3.setOnFinished(e ->
+                flipCardAnimation(dealerCard3, () ->
+                        setCardImage(dealerCard3, dealerHand.get(2), true)
+                )
+        );
+        p3.play();
     }
 
     public void setCardImage(Pane cardPane, Card card, boolean faceUp) {
@@ -264,6 +336,19 @@ public class GamePlayController {
         }
 
         drawCards(anteBetList.getValue());
+
+        if(anteBetList.getValue() != null){
+            anteBetList.setDisable(true);
+        }
+        if(pairPlusBetList.getValue() != null){
+            pairPlusBetList.setDisable(true);
+        }
+        if(anteBetList.getValue() != null && pairPlusBetList.getValue() != null){
+            placeBet.setDisable(true);
+        }
+
+
+
     }
 
 
@@ -277,11 +362,10 @@ public class GamePlayController {
         ArrayList<Card> playerHand = deck.hand3();
         ArrayList<Card> dealerHand = deck.hand3();
         foldButton.setDisable(false);
-
-
-        setCardImage(playerCard1, playerHand.get(0), true);
-        setCardImage(playerCard2, playerHand.get(1), true);
-        setCardImage(playerCard3, playerHand.get(2), true);
+//
+//        setCardImage(dealerCard1, dealerHand.get(0), true);
+//        setCardImage(dealerCard2, dealerHand.get(1), true);
+//        setCardImage(dealerCard3, dealerHand.get(2), true);
 
         flipDealer(new PokerInfo() {{
             setDealerHand(dealerHand);
@@ -304,13 +388,13 @@ public class GamePlayController {
         int totalWinnings;
         if (playerRank > dealerRank) {
             totalWinnings = anteBet * 2;
-            info.setMessage("You win!");
+            messageHistory.getItems().add("You win!");
         } else if (playerRank == dealerRank) {
             totalWinnings = 0;
-            info.setMessage("Tie!");
+            messageHistory.getItems().add("Tie!");
         } else {
             totalWinnings = -anteBet;
-            info.setMessage("You lose!");
+            messageHistory.getItems().add("You lose!");
         }
 
         winnings.setText("$" + totalWinnings);
@@ -339,6 +423,53 @@ public class GamePlayController {
 
 
     }
+
+    private void freshStart() {
+        // Reset total winnings
+        totalWinnings = 0;
+        winnings.setText("Total Winnings: $0");
+
+
+        messageHistory.getItems().clear();
+
+
+        playerHand = new ArrayList<>();
+        dealerHand = new ArrayList<>();
+
+
+
+        dealerCard1.getChildren().clear();
+        dealerCard2.getChildren().clear();
+        dealerCard3.getChildren().clear();
+        playerCard1.getChildren().clear();
+        playerCard2.getChildren().clear();
+        playerCard3.getChildren().clear();
+        if(!newLookActive){
+            dealerCard1.setStyle(regularPaneStyle);
+            dealerCard2.setStyle(regularPaneStyle);
+            dealerCard3.setStyle(regularPaneStyle);
+            playerCard1.setStyle(regularPaneStyle);
+            playerCard2.setStyle(regularPaneStyle);
+            playerCard3.setStyle(regularPaneStyle);
+        }else{
+            dealerCard1.setStyle(newLookPaneStyle);
+            dealerCard2.setStyle(newLookPaneStyle);
+            dealerCard3.setStyle(newLookPaneStyle);
+            playerCard1.setStyle(newLookPaneStyle);
+            playerCard2.setStyle(newLookPaneStyle);
+            playerCard3.setStyle(newLookPaneStyle);
+        }
+
+
+        anteBetList.setDisable(false);
+        pairPlusBetList.setDisable(false);
+
+        anteBetList.getSelectionModel().clearSelection();
+        pairPlusBetList.getSelectionModel().clearSelection();
+
+        resetForNewHand();
+    }
+
 
     private void updateButtonStates() {
         boolean wagerSelected = anteBetList.getValue() != null;

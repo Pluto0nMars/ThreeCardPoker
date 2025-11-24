@@ -145,12 +145,14 @@
                           -fx-border-width: 2;"
                           promptText="wager $(5-25)"/>
 
-                <Button
+                <Button alignment="CENTER"
                     fx:id="placeBet"
                     prefHeight="30"
                     prefWidth="120"
                     text="Place Wager"
                     onAction="#handlePlaceWager"
+                    style="-fx-font-size: 16px;"
+                        disable="true"
                 />
 
 
