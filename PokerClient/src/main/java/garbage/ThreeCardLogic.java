@@ -56,8 +56,15 @@ public class ThreeCardLogic {
         return (cards.get(0).getRank() == cards.get(1).getRank() || cards.get(0).getRank() == cards.get(2).getRank() || cards.get(1).getRank() == cards.get(2).getRank());
     }
 
-    public static int evalPairPlusWinnings(ArrayList<Card> hand, int bet) {
+
+    /*
+        evaluate if a deck hand
+     */
+    public static int evalPairPlusBet(ArrayList<Card> hand, int bet) {
         int rank = rankHand(hand); // use your existing rankHand method
+        if (rank < 1){
+            return 0;
+        }
         switch(rank) {
             case 5: // Straight Flush
                 return bet * 40;
@@ -68,11 +75,18 @@ public class ThreeCardLogic {
             case 2: // Flush
                 return bet * 3;
             case 1: // Pair
-                return bet * 1;
+                return bet * 2;
             default: // High card
                 return 0;
         }
     }
+
+    /*
+        Evaluates if a hand has a pair. Returns PairPlusBet*2 if true otherwise 0
+     */
+//    public static int evalPairPlusBet(ArrayList<Card> hand, int ppBet){
+//        return isPair(hand) ? ppBet*2 : 0;
+//    }
 
 
 }

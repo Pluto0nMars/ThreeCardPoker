@@ -161,7 +161,7 @@
             </VBox>
 
             <HBox alignment="CENTER">
-                <Label fx:id="winnings" text="WINNINGS: $500"
+                <Label fx:id="winnings" text="WINNINGS: $0"
                        style="-fx-font-size: 20px;"/>
             </HBox>
         </VBox>

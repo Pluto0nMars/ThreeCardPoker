@@ -83,6 +83,10 @@ public class PokerServer {
                 // putting it all together. might need to think about how to implement this
                 while (true) {
                     Object obj = in.readObject();
+                    if(obj == null){
+                        return;
+                    }
+
                     if (!(obj instanceof PokerInfo)) continue;
 
                     PokerInfo request = (PokerInfo) obj;
@@ -105,15 +109,6 @@ public class PokerServer {
                             log("Client #" + clientNumber + " | Round- " + response.getRoundNum() + " | " +
                                     "Dealer: " + currRound.getServerHand().toString() +
                                     "Client: " + currRound.getClientHand().toString());
-
-
-                            System.out.println("SERVER: About to send player hand with " +
-                                    response.getPlayerHand().size() + " cards");
-                            for (shared.game.Card c : response.getPlayerHand()) {
-                                System.out.println("  SERVER: Card file = " + c.getCardFile());
-                            }
-
-                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
                             break;
 
                         case PLAY:
