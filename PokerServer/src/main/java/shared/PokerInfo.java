@@ -15,16 +15,18 @@ public class PokerInfo implements Serializable {
 
     private int anteBet;
     private int pairPlusBet;
+    private int playBet;
     private String message;
     private ClientAction action;
 
     public PokerInfo (){
         playerHand = new ArrayList<>();
         dealerHand = new ArrayList<>();
-        totBalance = 500;
+        totBalance = 0;
         roundNum = 0;
         anteBet = 0;
         pairPlusBet = 0;
+        playBet = 0;
         message = "";
         action = null;
     }
@@ -46,6 +48,9 @@ public class PokerInfo implements Serializable {
 
     public int getPairPlusBet(){return pairPlusBet;}
     public void setPairPlusBet(int pairPlus){pairPlusBet = pairPlus;}
+
+    public int getPlayBet(){return playBet;}
+    public void setPlayBet(int play){playBet = play;}
 
     public String getMessage(){return message;}
     public void setMessage(String message){this.message = message;}

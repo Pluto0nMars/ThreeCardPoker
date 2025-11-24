@@ -46,7 +46,7 @@ public class GamePlayController {
     Button foldButton;
 
     @FXML
-    Button placeBet;
+    Button placeBetButton;
 
     @FXML
     Button playButton;
@@ -75,11 +75,7 @@ public class GamePlayController {
 
     private boolean handInProgress = false;
 
-
-
-
-    int totalWinnings = 0;
-
+    int totalBalance = 500;
 
     private boolean newLookActive = false;
     private final String originalStyle = "-fx-background-color: linear-gradient(to bottom right, #2e8b57,  #008000);";
@@ -100,9 +96,10 @@ public class GamePlayController {
 
 
     void initializeWagersAndMenu() {
-        // might need to change this to [5-25] cpntinuous
-        anteBetList.getItems().addAll(5, 10, 15, 20, 25);
-        pairPlusBetList.getItems().addAll(5, 10, 15, 20, 25);
+        for (int i=5; i<=25; i++){
+            anteBetList.getItems().add(i);
+            pairPlusBetList.getItems().add(i);
+        }
 
 
         menu.getItems().addAll("FRESH START", "NEW LOOK", "EXIT");
@@ -113,9 +110,9 @@ public class GamePlayController {
             Integer anteBet = anteBetList.getValue();
             Integer pairPlusBet = pairPlusBetList.getValue();
 
-                updateButtonStates();
+//                updateButtonStates();
                 //drawCards(anteBet);
-                placeBet.setDisable(false);
+                placeBetButton.setDisable(false);
 
         });
 
@@ -310,10 +307,15 @@ public class GamePlayController {
     // improve this once gui gets updated
     @FXML
     public void handlePlaceWager(ActionEvent event) throws IOException {
+        placeBetButton.setDisable(true);
+        playButton.setDisable(false);
+        foldButton.setDisable(false);
+
         System.out.println("HANDLE WAGER button clicked!");
         if (client == null || anteBetList.getValue() == null) return;
 
         PokerInfo info = new PokerInfo();
+
         info.setAction(ClientAction.PLACE_BET);
         if (anteBetList.getValue() == null) {
             info.setAnteBet(5);
@@ -344,7 +346,7 @@ public class GamePlayController {
             pairPlusBetList.setDisable(true);
         }
         if(anteBetList.getValue() != null && pairPlusBetList.getValue() != null){
-            placeBet.setDisable(true);
+            placeBetButton.setDisable(true);
         }
 
 
@@ -413,20 +415,16 @@ public class GamePlayController {
                 pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 5
         );
 
-
         if (ppWinnings > 0) {
             messageHistory.getItems().add("Pair Plus won: $" + ppWinnings);
-            totalWinnings += ppWinnings;
+            totalBalance += ppWinnings;
         }
-
-        winnings.setText("Total Winnings: $" + totalWinnings);
-
-
+        winnings.setText("Total Winnings: $" + totalBalance);
     }
 
     private void freshStart() {
         // Reset total winnings
-        totalWinnings = 0;
+        totalBalance = 0;
         winnings.setText("Total Winnings: $0");
 
 
@@ -473,8 +471,14 @@ public class GamePlayController {
 
     private void updateButtonStates() {
         boolean wagerSelected = anteBetList.getValue() != null;
+
+//        if(placeBet.isDisable()){
+//
+//        }
+
+//        if placeBet.isD
         playButton.setDisable(!wagerSelected);  // Only enable play if a wager is selected
-        foldButton.setDisable(true);            // Fold starts disabled until a hand is dealt
+        foldButton.setDisable(!wagerSelected);            // Fold starts disabled until a hand is dealt
     }
 
     private void resetForNewHand() {

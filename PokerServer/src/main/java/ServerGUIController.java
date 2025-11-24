@@ -12,16 +12,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ServerGUIController implements Initializable {
-    @FXML private VBox root;
-    @FXML private BorderPane root2;
-    @FXML private HBox top;             //
     @FXML private Button startServer;
     @FXML private Button endServer;
-    @FXML private HBox middle;          //
-    @FXML private HBox bottom;          //
 
     @FXML public TextField numClients;
-    @FXML public ListView<String> gameLogs;
     @FXML public ListView<String> serverLogs;
 
 //    private ServerMain serverMain = new ServerMain();
@@ -35,15 +29,7 @@ public class ServerGUIController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub`
-        VBox.setVgrow(middle, Priority.ALWAYS);
 
-//        server = new PokerServer(
-//                "localhost",
-//                5555,
-//                message -> Platform.runLater(() ->serverLogs.getItems().add(message)),
-//                count -> Platform.runLater(() -> numClients.setText(count + " Players"))
-//        );
-//        new Thread(() -> server.run()).start();
     }
 
 
