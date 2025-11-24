@@ -37,4 +37,6 @@ public class PokerClient {
     public ObjectOutputStream getOutputStream(){
         return out;
     }
+    public Socket getSocket(){return this.socket;}
+
 }
