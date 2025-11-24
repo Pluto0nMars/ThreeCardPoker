@@ -1,4 +1,6 @@
-package shared.game;
+package garbage;
+
+import shared.game.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;

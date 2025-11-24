@@ -106,6 +106,13 @@ public class PokerServer {
                                     "Dealer: " + currRound.getServerHand().toString() +
                                     "Client: " + currRound.getClientHand().toString());
 
+
+                            System.out.println("SERVER: About to send player hand with " +
+                                    response.getPlayerHand().size() + " cards");
+                            for (shared.game.Card c : response.getPlayerHand()) {
+                                System.out.println("  SERVER: Card file = " + c.getCardFile());
+                            }
+
                             System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
                             break;
 
@@ -113,7 +120,7 @@ public class PokerServer {
                             if (currRound == null) {
                                 response.setMessage("Error: No active round to fold.");
                                 log("Client #" + clientNumber + " tried to play without active round");
-                                return;
+                                break;
                             }
 
                             int playerScore = ThreeCardLogic.rankHand(currRound.getClientHand().getCards());
