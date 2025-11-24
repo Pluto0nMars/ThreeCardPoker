@@ -18,23 +18,23 @@
         </HBox>
     </top>
 
+<!--    <center>-->
+<!--        <HBox fx:id="middle" spacing="10" alignment="CENTER">-->
+<!--            <VBox alignment="CENTER" spacing="0">-->
+<!--                <padding>-->
+<!--                    <Insets top="30" right="30" bottom="30" left="30"/>-->
+<!--                </padding>-->
+
+
+<!--                <Label text="Game Logs" alignment="CENTER"/>-->
+
+<!--                <ListView fx:id="gameLogs" editable="false"-->
+<!--                          prefWidth="930" prefHeight="300" />-->
+<!--            </VBox>-->
+<!--        </HBox>-->
+<!--    </center>-->
+
     <center>
-        <HBox fx:id="middle" spacing="10" alignment="CENTER">
-            <VBox alignment="CENTER" spacing="0">
-                <padding>
-                    <Insets top="30" right="30" bottom="30" left="30"/>
-                </padding>
-
-
-                <Label text="Game Logs" alignment="CENTER"/>
-
-                <ListView fx:id="gameLogs" editable="false"
-                          prefWidth="930" prefHeight="300" />
-            </VBox>
-        </HBox>
-    </center>
-
-    <bottom >
         <HBox fx:id="bottom" spacing="10" alignment="CENTER">
             <VBox alignment="CENTER" spacing="0">
                 <padding>
@@ -46,10 +46,10 @@
 
                 <!-- ListView instead of TextField -->
                 <ListView fx:id="serverLogs" editable="false"
-                          prefWidth="930" prefHeight="300" />
+                          prefWidth="930" prefHeight="500" />
             </VBox>
         </HBox>
-    </bottom>
+    </center>
 
 
 </BorderPane>

@@ -1,4 +1,4 @@
-package shared.game;
+package garbage;
 /*
 A round has 1 connected client
 1 decks of cards
@@ -10,6 +10,8 @@ env variables:
   * pair plus wager
   * outcome W or L
 */
+
+import shared.game.Card;
 
 import java.util.ArrayList;
 

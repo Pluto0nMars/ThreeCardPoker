@@ -119,7 +119,7 @@
         </VBox>
     </right>
     <left>
-        <VBox spacing="30" style="-fx-padding: 10;">
+        <VBox spacing="30" style="-fx-padding: 10;" alignment="CENTER_LEFT">
             <VBox>
                 <Label text="PICK ANTE BET($):"
                        style="-fx-background-color: transparent;
@@ -131,7 +131,9 @@
                           -fx-font-size: 16px;
                           -fx-border-color: black;
                           -fx-border-width: 2;"
-                          promptText="wager $(5-25)" onAction="#handlePlaceWager"/>
+                          promptText="wager $(5-25)"
+                          />
+<!--                          onAction="#handlePlaceWager"/>-->
 
                 <Label text="PICK PAIR PLUS($):"
                        style="-fx-background-color: transparent;
@@ -146,7 +148,7 @@
                           promptText="wager $(5-25)"/>
 
                 <Button alignment="CENTER"
-                    fx:id="placeBet"
+                    fx:id="placeBetButton"
                     prefHeight="30"
                     prefWidth="120"
                     text="Place Wager"
@@ -159,7 +161,7 @@
             </VBox>
 
             <HBox alignment="CENTER">
-                <Label fx:id="winnings" text="WINNINGS: $0"
+                <Label fx:id="winnings" text="WINNINGS: $500"
                        style="-fx-font-size: 20px;"/>
             </HBox>
         </VBox>
