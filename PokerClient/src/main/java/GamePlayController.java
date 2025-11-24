@@ -210,11 +210,13 @@ public class GamePlayController {
                 info.setMessage("Player quit.");
                 client.getOutputStream().writeObject(info);
                 client.getOutputStream().flush();
-            }catch(Exception e){
+            }
+            catch(Exception e){
                 e.printStackTrace();
             }
 
             try{
+                listening = false;
                 client.getSocket().close();
             } catch (IOException e) {}
 
@@ -245,11 +247,17 @@ public class GamePlayController {
         new Thread(() -> {
             try {
                 ObjectInputStream in = client.getInputStream();
-                while (true) {
-                    PokerInfo info = (PokerInfo) in.readObject();
+                while (listening) {
+                    PokerInfo info;
+                    try{
+                        info = (PokerInfo) in.readObject();
+                    }catch(IOException e){
+                        break;
+                    }
+
+                    if (info == null) break;
 
                     Platform.runLater(() -> {
-                        System.out.println("Received message: " + info.getMessage()); // <- DEBUG
                         updateGUI(info);
                         updateHands(info);
                     });
