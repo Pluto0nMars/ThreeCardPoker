@@ -21,7 +21,7 @@ public class PokerInfo implements Serializable {
     public PokerInfo (){
         playerHand = new ArrayList<>();
         dealerHand = new ArrayList<>();
-        totBalance = 0;
+        totBalance = 500;
         roundNum = 0;
         anteBet = 0;
         pairPlusBet = 0;

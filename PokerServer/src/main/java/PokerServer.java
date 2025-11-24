@@ -1,6 +1,7 @@
 //package PokerServer.src.main.java;
 
 import game.Round;
+import game.Hand;
 import game.ThreeCardLogic;
 import shared.PokerInfo;
 
@@ -61,7 +62,7 @@ public class PokerServer {
         // constructor for a ClientThread
         ClientThread(Socket s, int number) {
             this.connection = s;
-            this.clientNumber = number;
+            this.clientNumber = number+1;
         }
 
         private ArrayList<shared.game.Card> convertHand(ArrayList<game.Card> serverHand) {
@@ -89,18 +90,38 @@ public class PokerServer {
 
                     switch (request.getAction()) {
                         case PLACE_BET:
+//                            if (currRound == null) {
+//                                response.setMessage("Error: No active round to fold.");
+//                                log("Client #" + clientNumber + " tried to fold without active round");
+//                                return;
+//                            }
+
                             currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
-                            response.setMessage("Cards dealt! Make your move!");
-                            log("Cards dealt for client #" + clientNumber + "! Make your move!\"");
+                            response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
+                            response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
+                            response.setRoundNum(response.getRoundNum()+1);
+                            response.setMessage("Cards dealt! Your hand has been created");
+
+                            log("Client #" + clientNumber + " | Round- " + response.getRoundNum() + " | " +
+                                    "Dealer: " + currRound.getServerHand().toString() +
+                                    "Client: " + currRound.getClientHand().toString());
+
+                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
                             break;
 
                         case PLAY:
+                            if (currRound == null) {
+                                response.setMessage("Error: No active round to fold.");
+                                log("Client #" + clientNumber + " tried to play without active round");
+                                return;
+                            }
+
                             int playerScore = ThreeCardLogic.rankHand(currRound.getClientHand().getCards());
                             int serverScore = ThreeCardLogic.rankHand(currRound.getServerHand().getCards());
                             String outcome;
                             int payout;
 
-//                            NOTE
+                            // ADD DIFFERENT PAYOUT LOGIC AS IN INSTRUCTIONS
                             // add different payout logic maybe
                             if (playerScore > 0 && playerScore > serverScore) {
                                 outcome = "WIN";
@@ -116,27 +137,62 @@ public class PokerServer {
                             //currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
                             response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
                             response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
-                            response.setMessage("You " + outcome + "! Payout: " + payout);
-                            log("Client #" + clientNumber + out + "\'s.");
+                            response.setMessage("You " + outcome + "! Payout: " + payout + ". Winnings: $" + response.getTotBalance() + ".");
                             response.setTotBalance(totalBalance);
+
+                            log("Client #" + clientNumber + " " + outcome + "\'s.");
+
+                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
                             break;
                         case FOLD:
-                            response.setMessage("You folded!");
+                            handleFold(request, response);
                             break;
                         case QUIT:
                             log("Client #" + clientNumber + " has quit.");
                             clients.remove(this);
                             updateClientCount();
                             connection.close();
+                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
                             return;
                     }
+                    log("Client #" + clientNumber + " sending reponse: " + response.getMessage());
                     out.writeObject(response);
                     out.flush();
+                    log("Client #" + clientNumber + " reponse send successfully.");
                 }
             } catch (Exception e) {
                 System.out.println("Streams not open for client #" + clientNumber);
+                e.printStackTrace();
             }
         }
+
+        private void handleFold(PokerInfo request, PokerInfo response) {
+            try {
+                if (currRound == null) {
+                    response.setMessage("Error: No active round to fold.");
+                    log("Client #" + clientNumber + " tried to fold without active round");
+                    return;
+                }
+
+                int loss = -request.getAnteBet();
+                totalBalance += loss;
+
+                response.setMessage("You folded! Lost $" + request.getAnteBet() + ". Total: $" + totalBalance);
+                response.setTotBalance(totalBalance);
+
+                log("Client #" + clientNumber + " folded. Lost $" + request.getAnteBet());
+
+                // Round is over
+                currRound = null;
+
+            } catch (Exception e) {
+                response.setMessage("Error processing fold: " + e.getMessage());
+                log("Client #" + clientNumber + " error in FOLD: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     private void log(String message) {
@@ -171,4 +227,7 @@ public class PokerServer {
         log("Client has quit.");
         updateClientCount();
     }
+
+
+
 }

@@ -22,6 +22,17 @@ public class Hand {
     public void printHand(){
         for (Card card : cards){
             System.out.println(card.toString());
+        }
     }
-}
+
+
+    @Override
+    public String toString() {
+        String rv = "";
+        for (Card card : cards) {
+                rv += (card.toString()) + " | ";
+        }
+        return rv;
+    }
+
 }
