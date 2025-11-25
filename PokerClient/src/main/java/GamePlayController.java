@@ -1,6 +1,9 @@
 import garbage.ThreeCardLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -8,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import shared.*;
 import shared.game.Card;
 import javafx.event.ActionEvent;
@@ -596,47 +600,31 @@ public class GamePlayController {
         playButton.setDisable(true);
         foldButton.setDisable(true);
     }
+    /*
+    * Need amount and if user won
+    * */
+    private void showWinPopup(boolean playerWon, int amount) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("WinPopup.fxml"));
+            Parent root = loader.load();
 
-    private void showWinScene(String message){
-        Pane fullScreenOverlay = new Pane();
-        fullScreenOverlay.setStyle("-fx-background-color: linear-gradient(to bottom right,  #808080,  #000000);");
+            winController controller = loader.getController();
+            controller.setResult(playerWon, amount);
 
-        fullScreenOverlay.prefWidthProperty().bind(GameRoot.widthProperty());
-        fullScreenOverlay.prefHeightProperty().bind(GameRoot.heightProperty());
+            controller.setPlayAgainCallback(() -> {
+                // Reset game when user clicks play again
+                resetForNewRound();
+            });
 
-        Label winLabel = new Label(message);
-        winLabel.setStyle(
-                "-fx-text-fill: gold;" +
-                        "-fx-font-size: 72px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-effect: dropshadow(gaussian, black, 10, 0.7, 0, 0);");
+            Stage popup = new Stage();
+            popup.setTitle("Game Result");
+            popup.setScene(new Scene(root));
+            popup.setResizable(false);
+            popup.show();
 
-        winLabel.layoutXProperty().bind(fullScreenOverlay.widthProperty().subtract(winLabel.widthProperty()).divide(2));
-        winLabel.layoutYProperty().bind(fullScreenOverlay.heightProperty().subtract(winLabel.heightProperty()).divide(2));
-
-        fullScreenOverlay.getChildren().add(winLabel);
-        GameRoot.getChildren().add(fullScreenOverlay);
-
-
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(400), fullScreenOverlay);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        PauseTransition stay = new PauseTransition(Duration.seconds(2));
-
-
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(400), fullScreenOverlay);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-
-
-        fadeOut.setOnFinished(e -> GameRoot.getChildren().remove(fullScreenOverlay));
-
-        fadeIn.setOnFinished(e -> stay.play());
-        stay.setOnFinished(e -> fadeOut.play());
-
-        fadeIn.play();
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }

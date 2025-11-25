@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="winController"
+            prefHeight="250" prefWidth="420" style="-fx ">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label fx:id="resultLabel" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <Label fx:id="amountLabel" style="-fx-font-size: 20px;"/>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="playAgainButton" text="Play Again" prefWidth="120"/>
+                <Button fx:id="exitButton" text="Exit" prefWidth="120"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <padding>
+        <Insets top="20" bottom="20" left="20" right="20"/>
+    </padding>
+</BorderPane>
