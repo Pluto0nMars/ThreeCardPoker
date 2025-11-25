@@ -55,6 +55,30 @@ public class ThreeCardLogic{
     }
 
 
+    /*
+    evaluate if a deck hand
+ */
+    public static int evalPairPlusBet(ArrayList<Card> hand, int bet) {
+        int rank = rankHand(hand); // use your existing rankHand method
+        if (rank < 1){
+            return 0;
+        }
+        switch(rank) {
+            case 5: // Straight Flush
+                return bet * 40;
+            case 4: // Three of a Kind
+                return bet * 30;
+            case 3: // Straight
+                return bet * 6;
+            case 2: // Flush
+                return bet * 3;
+            case 1: // Pair
+                return bet * 2;
+            default: // High card
+                return 0;
+        }
+    }
+
 
 }
 

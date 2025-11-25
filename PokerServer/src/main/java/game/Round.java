@@ -12,6 +12,7 @@ env variables:
 */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Round {
     private Deck deck;
@@ -38,6 +39,17 @@ public class Round {
             outcome = "won";
         }
         else outcome = "lost";
+    }
+
+    public int getHighestCard(ArrayList<Card> hand){
+        int c1 = hand.get(0).getRank();
+        int c2 = hand.get(1).getRank();
+        int c3 = hand.get(2).getRank();
+
+        int[] vals = {c1,c2,c3};
+        Arrays.sort(vals);
+
+        return vals[2];
     }
 
     public Hand getClientHand() {

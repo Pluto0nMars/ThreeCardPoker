@@ -4,6 +4,7 @@ import game.Round;
 import game.Hand;
 import game.ThreeCardLogic;
 import shared.PokerInfo;
+import shared.game.Card;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -94,12 +95,6 @@ public class PokerServer {
 
                     switch (request.getAction()) {
                         case PLACE_BET:
-//                            if (currRound == null) {
-//                                response.setMessage("Error: No active round to fold.");
-//                                log("Client #" + clientNumber + " tried to fold without active round");
-//                                return;
-//                            }
-
                             currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
                             response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
                             response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
@@ -112,39 +107,43 @@ public class PokerServer {
                             break;
 
                         case PLAY:
-                            if (currRound == null) {
-                                response.setMessage("Error: No active round to fold.");
-                                log("Client #" + clientNumber + " tried to play without active round");
-                                break;
-                            }
+//                            if (currRound == null) {
+//                                response.setMessage("Error: No active round to fold.");
+//                                log("Client #" + clientNumber + " tried to play without active round");
+//                                break;
+//                            }
+//
+//                            int playerScore = ThreeCardLogic.rankHand(currRound.getClientHand().getCards());
+//                            int serverScore = ThreeCardLogic.rankHand(currRound.getServerHand().getCards());
+//                            String outcome;
+//                            int payout;
+//
+//
+//                            // ADD DIFFERENT PAYOUT LOGIC AS IN INSTRUCTIONS
+//                            // add different payout logic maybe
+//                            if (playerScore > 0 && playerScore > serverScore) {
+//                                outcome = "WIN";
+//                                payout = currRound.getAnteWager() * 2;
+//                            } else if (playerScore == serverScore) {
+//                                outcome = "DRAW";
+//                                payout = 0;
+//                            } else {
+//                                outcome = "LOSE";
+//                                payout = -currRound.getAnteWager();
+//                            }
+//                            totalBalance += payout;
+//                            //currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
+//                            response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
+//                            response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
+//                            response.setMessage("You " + outcome + "! Payout: " + payout + ". Winnings: $" + response.getTotBalance() + ".");
+//                            response.setTotBalance(totalBalance);
+//
+//                            log("Client #" + clientNumber + " " + outcome + "\'s.");
+//
+//                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
+//                            break;
 
-                            int playerScore = ThreeCardLogic.rankHand(currRound.getClientHand().getCards());
-                            int serverScore = ThreeCardLogic.rankHand(currRound.getServerHand().getCards());
-                            String outcome;
-                            int payout;
-
-                            // ADD DIFFERENT PAYOUT LOGIC AS IN INSTRUCTIONS
-                            // add different payout logic maybe
-                            if (playerScore > 0 && playerScore > serverScore) {
-                                outcome = "WIN";
-                                payout = currRound.getAnteWager() * 2;
-                            } else if (playerScore == serverScore) {
-                                outcome = "DRAW";
-                                payout = 0;
-                            } else {
-                                outcome = "LOSE";
-                                payout = -currRound.getAnteWager();
-                            }
-                            totalBalance += payout;
-                            //currRound = new Round(request.getAnteBet(), request.getPairPlusBet());
-                            response.setPlayerHand(convertHand(currRound.getClientHand_arrList()));
-                            response.setDealerHand(convertHand(currRound.getServerHand_arrList()));
-                            response.setMessage("You " + outcome + "! Payout: " + payout + ". Winnings: $" + response.getTotBalance() + ".");
-                            response.setTotBalance(totalBalance);
-
-                            log("Client #" + clientNumber + " " + outcome + "\'s.");
-
-                            System.out.println(request.getAction() +  request.getMessage() + request.getPlayerHand() + request.getDealerHand() + request.getPairPlusBet() + request.getAnteBet());
+                            handlePlay(request, response);
                             break;
                         case FOLD:
                             handleFold(request, response);
@@ -168,7 +167,73 @@ public class PokerServer {
             }
         }
 
-        private void handleFold(PokerInfo request, PokerInfo response) {
+        private void handlePlay(PokerInfo request, PokerInfo response){
+            try{
+                if (currRound == null) {
+                    response.setMessage("Error: No active round to play.");
+                    log("Client #" + clientNumber + " tried to play without active round");
+                    return;
+                }
+
+                ArrayList<game.Card> playerHand = currRound.getClientHand_arrList();
+                ArrayList<game.Card> dealerHand = currRound.getServerHand_arrList();
+                int playerRank = ThreeCardLogic.rankHand(playerHand);
+                int dealerRank = ThreeCardLogic.rankHand(dealerHand);
+
+                // Dealer qualifies only if Queen high or better
+                int dealerHigh = dealerHand.stream().mapToInt(game.Card::getRank).max().orElse(0);
+                boolean dealerQualifies = dealerHigh >= 12;
+
+                int anteBet = currRound.getAnteWager();
+                int pairPlusBet = currRound.getPlusWager();
+                int playBet = anteBet;
+
+                int totalRoundWinnings = 0;
+
+                // Pair Plus evaluation
+                int ppWin = ThreeCardLogic.evalPairPlusBet(playerHand, pairPlusBet);
+                if (ppWin > 0) {
+                    totalRoundWinnings += ppWin;
+                } else {
+                    totalRoundWinnings -= pairPlusBet;
+                }
+                log("Client #" + clientNumber + " sending response: " + response.getMessage());
+
+
+                int highestClient = currRound.getHighestCard(playerHand);
+                int highestServer = currRound.getHighestCard(dealerHand);
+
+                String outcome;
+                if(!dealerQualifies){
+                    outcome = "Dealer did not qualify, bets returned.";
+                }
+                else if(playerRank > dealerRank || (highestClient > highestServer)){
+                    outcome = "WIN";
+                    totalRoundWinnings += (anteBet + playBet);
+                }
+                else if (highestClient == highestServer){
+                    outcome = "DRAW";
+                }
+                else{
+                    outcome = "LOST";
+                    totalRoundWinnings -= (anteBet + playBet);
+                }
+
+                response.setPlayerHand(convertHand(playerHand));
+                response.setDealerHand(convertHand(dealerHand));
+                response.setTotBalance(totalBalance += totalRoundWinnings);
+                response.setMessage("Round result: " + outcome + ". Total this round: $" + totalRoundWinnings);
+
+                log("Client #" + clientNumber + " | " + outcome + " | Winnings: " + totalRoundWinnings + " | Balance: " + totalBalance);
+                currRound = null; // Round ends
+            } catch (Exception e) {
+                response.setMessage("Error processing PLAY: " + e.getMessage());
+                log("Client #" + clientNumber + " error in PLAY: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        private void handleFold2(PokerInfo request, PokerInfo response) {
             try {
                 if (currRound == null) {
                     response.setMessage("Error: No active round to fold.");
@@ -187,6 +252,36 @@ public class PokerServer {
                 // Round is over
                 currRound = null;
 
+            } catch (Exception e) {
+                response.setMessage("Error processing fold: " + e.getMessage());
+                log("Client #" + clientNumber + " error in FOLD: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        private void handleFold(PokerInfo request, PokerInfo response) {
+            try {
+                if (currRound == null) {
+                    response.setMessage("Error: No active round to fold.");
+                    log("Client #" + clientNumber + " tried to fold without active round");
+                    return;
+                }
+
+                ArrayList<game.Card> playerHand = currRound.getClientHand_arrList();
+                ArrayList<game.Card> dealerHand = currRound.getServerHand_arrList();
+                int playerRank = ThreeCardLogic.rankHand(playerHand);
+                int dealerRank = ThreeCardLogic.rankHand(dealerHand);
+                int anteBet = currRound.getAnteWager();
+                int pairPlusBet = currRound.getPlusWager();
+                totalBalance -= (anteBet+pairPlusBet);
+
+                response.setPlayerHand(convertHand(playerHand));
+                response.setDealerHand(convertHand(dealerHand));
+                response.setTotBalance(totalBalance);
+                response.setMessage("Round Folded. Total this round: -$" + (anteBet+pairPlusBet));
+
+                log("Client #" + clientNumber + " | folded." +  " | Outcome: -$" + (anteBet+pairPlusBet) + " | Balance: " + totalBalance);
+                currRound = null; // Round ends
             } catch (Exception e) {
                 response.setMessage("Error processing fold: " + e.getMessage());
                 log("Client #" + clientNumber + " error in FOLD: " + e.getMessage());
