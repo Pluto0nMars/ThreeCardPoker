@@ -307,6 +307,12 @@ public class GamePlayController {
             setCardImage(playerCard2, null, false);
             setCardImage(playerCard3, null, false);
         }
+        if(totalBalance < 0){
+            showWinPopup(false, totalBalance);
+        }
+        else{
+            showWinPopup(true, totalBalance);
+        }
     }
 
     public void flipDealer(PokerInfo info) {
@@ -472,7 +478,7 @@ public class GamePlayController {
 
     // if fold lose ante bet and pair plus if yes
     @FXML
-    private void handleFold() {
+    public void handleFold() {
         playerFolded = true;
         playButton.setDisable(true);
         foldButton.setDisable(true);
@@ -537,7 +543,7 @@ public class GamePlayController {
 //    }
 
 
-    private void updateButtonStates() {
+    void updateButtonStates() {
         boolean wagerSelected = anteBetList.getValue() != null;
 
 //        if(placeBet.isDisable()){
@@ -603,7 +609,7 @@ public class GamePlayController {
     /*
     * Need amount and if user won
     * */
-    private void showWinPopup(boolean playerWon, int amount) {
+    public void showWinPopup(boolean playerWon, int amount) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("WinPopup.fxml"));
             Parent root = loader.load();
@@ -626,5 +632,26 @@ public class GamePlayController {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Card> getPlayerHand() {
+        return playerHand;
+    }
+
+    public ArrayList<Card> getDealerHand() {
+        return dealerHand;
+    }
+
+    public int getTotalBalance() {
+        return totalBalance;
+    }
+
+    public boolean isPlayerFolded() {
+        return playerFolded;
+    }
+
+    public boolean isNewLookActive() {
+        return newLookActive;
+    }
+
 
 }
