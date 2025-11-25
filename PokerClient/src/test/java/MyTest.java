@@ -13,6 +13,8 @@ import java.util.ArrayList;
 class MyTest {
     GamePlayController controller;
 
+
+
     @BeforeEach
     void setup() {
         controller = new GamePlayController();
@@ -20,23 +22,25 @@ class MyTest {
 
     @Test
     void testPlayerFoldedDefault() {
+        // By default, playerFolded should be false
         assertFalse(controller.isPlayerFolded());
     }
 
     @Test
     void testNewLookDefault() {
+        // By default, newLookActive should be false
         assertFalse(controller.isNewLookActive());
     }
 
     @Test
-    void testGetPlayerHandInitiallyNull() {
+    void testPlayerHandInitiallyNull() {
+        // playerHand should be null before any cards are drawn
         assertNull(controller.getPlayerHand());
     }
 
-
-
     @Test
-    void testGetDealerHandInitiallyNull() {
+    void testDealerHandInitiallyNull() {
+        // dealerHand should be null before any cards are drawn
         assertNull(controller.getDealerHand());
     }
 
