@@ -96,20 +96,13 @@ public class GamePlayController {
             anteBetList.getItems().add(i);
             pairPlusBetList.getItems().add(i);
         }
-
-
         menu.getItems().addAll("FRESH START", "NEW LOOK", "EXIT");
 
         // When the user selects a wager, draw cards
-//                                                                          MIGHT WANT TO ONLY DO THIS ON PLAY BUTTON. BC NEED TO SEND PACKET TO SERVER
         anteBetList.setOnAction(event -> {
             Integer anteBet = anteBetList.getValue();
             Integer pairPlusBet = pairPlusBetList.getValue();
-
-//                updateButtonStates();
-                //drawCards(anteBet);
-                placeBetButton.setDisable(false);
-
+            placeBetButton.setDisable(false);
         });
 
         menu.setOnAction(event -> {
@@ -152,33 +145,6 @@ public class GamePlayController {
     }
 
     void drawCards(int wager) {
-//        Deck deck = new Deck();
-//        playerHand = deck.hand3();
-//        dealerHand = deck.hand3();
-
-        // Prepare UI for a new round — server will provide real cards later.
-        // Disable Play/Fold until server deals (or until user can play).
-//        playButton.setDisable(true);
-//        foldButton.setDisable(true);
-
-//        setCardImage(dealerCard1, dealerHand.get(0), false);
-//        fadeIn(dealerCard1, 0);
-//
-//        setCardImage(dealerCard2, dealerHand.get(1), false);
-//        fadeIn(dealerCard2, 150);
-//
-//        setCardImage(dealerCard3, dealerHand.get(2), false);
-//        fadeIn(dealerCard3, 300);
-//
-//        setCardImage(playerCard1, playerHand.get(0), true);
-//        fadeIn(playerCard1, 450);
-//
-//        setCardImage(playerCard2, playerHand.get(1), true);
-//        fadeIn(playerCard2, 600);
-//
-//        setCardImage(playerCard3, playerHand.get(2), true);
-//        fadeIn(playerCard3, 750);
-
         setCardImage(dealerCard1, null, false);
         fadeIn(dealerCard1, 0);
 
@@ -239,6 +205,10 @@ public class GamePlayController {
     }
 
     private void updateGUI(PokerInfo info) {
+        totalBalance += info.getTotBalance();
+//        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
+//        int oldWinnings = Integer.parseInt(txt);
+        winnings.setText("WINNINGS: $" + totalBalance);
         messageHistory.getItems().add(info.getMessage());
     }
 
@@ -251,6 +221,7 @@ public class GamePlayController {
                     PokerInfo info;
                     try{
                         info = (PokerInfo) in.readObject();
+                        System.out.println( info.getTotBalance());
                     }catch(IOException e){
                         break;
                     }
@@ -269,12 +240,9 @@ public class GamePlayController {
     }
 
     public void updateHands(PokerInfo info) {
-//        ArrayList<Card> playerHand = info.getPlayerHand();
-//        ArrayList<Card> dealerHand = info.getDealerHand();
         // later used in handle play and handle fold
-
-        System.out.println("CLIENT: updateHands called");
-        System.out.println("CLIENT: info.getPlayerHand() = " + info.getPlayerHand());
+//        System.out.println("CLIENT: updateHands called");
+//        System.out.println("CLIENT: info.getPlayerHand() = " + info.getPlayerHand());
 
         this.playerHand = info.getPlayerHand();
         this.dealerHand = info.getDealerHand();
@@ -398,18 +366,13 @@ public class GamePlayController {
         messageHistory.getItems().add("Waiting for server to deal cards...");
     }
 
+    // create serial item to send
+    // send it
+    // u
     @FXML
     public void handlePlay(ActionEvent event) throws IOException {
         if (client == null) return;
         foldButton.setDisable(false);
-
-        ArrayList<Card> playerHand = this.playerHand;
-        ArrayList<Card> dealerHand= this.dealerHand;
-
-        if (playerHand == null || dealerHand == null){
-            System.out.println("ERROR. Pressed play before card got dealt!");
-            return;
-        }
 
         // flip dealer cards
         flipDealer(new PokerInfo() {{
@@ -420,48 +383,91 @@ public class GamePlayController {
         int pairPlusBet = pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 0;
         int playBet = anteBet;
 
-        // Evaluate hand ranks
-        int playerRank = ThreeCardLogic.rankHand(playerHand);
-        int dealerRank = ThreeCardLogic.rankHand(dealerHand);
+        PokerInfo info = new PokerInfo();
+        info.setAction(ClientAction.PLAY);
+        info.setAnteBet(anteBet);
+        info.setPairPlusBet(pairPlusBet);
+        info.setPlayBet(playBet);
+        info.setPlayerHand(this.playerHand);
+        info.setDealerHand(this.dealerHand);
+        info.setMessage("Client is playing a round!");
 
-        // Dealer qualification (Queen high rank >= 12)
-        int dealerHigh = dealerHand.stream().mapToInt(Card::getRank).max().orElse(0);
-        boolean dealerQualifies = dealerHigh >= 12;
-
-        int totalWinnings = 0;
-
-        int ppWin = ThreeCardLogic.evalPairPlusBet(playerHand, pairPlusBet);
-        if (ppWin > 0) {
-            messageHistory.getItems().add("Pair Plus won: +$" + ppWin);
-            totalWinnings += ppWin;
-        }
-        else{
-            messageHistory.getItems().add("Pair Plus not won: -$" + pairPlusBet);
-            totalWinnings -= pairPlusBet;
+        try {
+            client.getOutputStream().writeObject(info);
+            client.getOutputStream().flush();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        // no win or lose
-        if(!dealerQualifies){
-            messageHistory.getItems().add("Dealer does not have Queen high.");
-            messageHistory.getItems().add("Ante and play wager returned to you!");
-        }
-//        else if (playerRank == dealerRank){
-//            messageHistory.getItems().add("Dealer rank = your rank. Bets returned!");
-//        }
-        else{
-            messageHistory.getItems().add("Dealer has a better hand. You lose -$" + (anteBet + playBet));
-            totalWinnings -= (anteBet + playBet);
-        }
-
-        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
-        int oldWinnings = Integer.parseInt(txt);
-        winnings.setText("WINNINGS: $" + (oldWinnings + (totalBalance+totalWinnings)));
         playButton.setDisable(true);
         foldButton.setDisable(true);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(4.5));
         pause.setOnFinished(e -> resetForNewRound());
         pause.play();
+
+
+//        ArrayList<Card> playerHand = this.playerHand;
+//        ArrayList<Card> dealerHand= this.dealerHand;
+//
+//        if (playerHand == null || dealerHand == null){
+//            System.out.println("ERROR. Pressed play before card got dealt!");
+//            return;
+//        }
+//
+//        // flip dealer cards
+//        flipDealer(new PokerInfo() {{
+//            setDealerHand(dealerHand);
+//        }});
+//
+//        int anteBet = anteBetList.getValue() != null ? anteBetList.getValue() : 5;
+//        int pairPlusBet = pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 0;
+//        int playBet = anteBet;
+//
+//        // Evaluate hand ranks
+//        int playerRank = ThreeCardLogic.rankHand(playerHand);
+//        int dealerRank = ThreeCardLogic.rankHand(dealerHand);
+//
+//        // Dealer qualification (Queen high rank >= 12)
+//        int dealerHigh = dealerHand.stream().mapToInt(Card::getRank).max().orElse(0);
+//        boolean dealerQualifies = dealerHigh >= 12;
+//
+//        int totalWinnings = 0;
+//
+//        int ppWin = ThreeCardLogic.evalPairPlusBet(playerHand, pairPlusBet);
+//        if (ppWin > 0) {
+//            messageHistory.getItems().add("Pair Plus won: +$" + ppWin);
+//            totalWinnings += ppWin;
+//        }
+//        else{
+//            messageHistory.getItems().add("Pair Plus not won: -$" + pairPlusBet);
+//            totalWinnings -= pairPlusBet;
+//        }
+//
+//        // no win or lose
+//        if(!dealerQualifies){
+//            messageHistory.getItems().add("Dealer does not have Queen high.");
+//            messageHistory.getItems().add("Ante and play wager returned to you!");
+//        }
+////        else if (playerRank == dealerRank){
+////            messageHistory.getItems().add("Dealer rank = your rank. Bets returned!");
+////        }
+//        else{
+//
+//            messageHistory.getItems().add("Dealer has a better hand. You lose -$" + (anteBet + playBet));
+//            totalWinnings -= (anteBet + playBet);
+//        }
+//
+//        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
+//        int oldWinnings = Integer.parseInt(txt);
+//        winnings.setText("WINNINGS: $" + (oldWinnings + (totalBalance+totalWinnings)));
+
+//        playButton.setDisable(true);
+//        foldButton.setDisable(true);
+//
+//        PauseTransition pause = new PauseTransition(Duration.seconds(4.5));
+//        pause.setOnFinished(e -> resetForNewRound());
+//        pause.play();
 
     }
 
@@ -473,74 +479,56 @@ public class GamePlayController {
         playButton.setDisable(true);
         foldButton.setDisable(true);
 
-        int anteBet = anteBetList.getValue();
-        int pairBet = pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 0;
+        flipDealer(new PokerInfo() {{
+            setDealerHand(dealerHand);
+        }});
 
-        messageHistory.getItems().add("You folded. Ante bet -$" + anteBet + "! Pair Plus lost: -$"+pairBet+"!");
+        int anteBet = anteBetList.getValue() != null ? anteBetList.getValue() : 5;
+        int pairPlusBet = pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 0;
+        int playBet = anteBet;
 
-        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
-        int oldWinnings = Integer.parseInt(txt);
-        totalBalance -= (anteBet+pairBet);
-        winnings.setText("WINNINGS: $" + (oldWinnings + totalBalance));
+        PokerInfo info = new PokerInfo();
+        info.setAction(ClientAction.FOLD);
+        info.setAnteBet(anteBet);
+        info.setPairPlusBet(pairPlusBet);
+        info.setPlayBet(playBet);
+        info.setPlayerHand(this.playerHand);
+        info.setDealerHand(this.dealerHand);
+        info.setMessage("Client has folded!");
+
+        try {
+            client.getOutputStream().writeObject(info);
+            client.getOutputStream().flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         PauseTransition pause = new PauseTransition(Duration.seconds(4.5));
         pause.setOnFinished(e -> resetForNewRound());
         pause.play();
+
+
+        //        playerFolded = true;
+//        playButton.setDisable(true);
+//        foldButton.setDisable(true);
+//
+//        int anteBet = anteBetList.getValue();
+//        int pairBet = pairPlusBetList.getValue() != null ? pairPlusBetList.getValue() : 0;
+//
+//        messageHistory.getItems().add("You folded. Ante bet -$" + anteBet + "! Pair Plus lost: -$"+pairBet+"!");
+//
+////        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
+////        int oldWinnings = Integer.parseInt(txt);
+//        totalBalance -= (anteBet+pairBet);
+//        winnings.setText("WINNINGS: $" + (totalBalance));
+//
+//        PauseTransition pause = new PauseTransition(Duration.seconds(4.5));
+//        pause.setOnFinished(e -> resetForNewRound());
+//        pause.play();
     }
-
-//    private void freshStart() {
-//        // Reset total winnings
-//        totalBalance = 500;
-//        winnings.setText("Total Winnings: $" + totalBalance);
-//
-//
-//        messageHistory.getItems().clear();
-//
-//
-//        playerHand = new ArrayList<>();
-//        dealerHand = new ArrayList<>();
-//
-//        dealerCard1.getChildren().clear();
-//        dealerCard2.getChildren().clear();
-//        dealerCard3.getChildren().clear();
-//        playerCard1.getChildren().clear();
-//        playerCard2.getChildren().clear();
-//        playerCard3.getChildren().clear();
-//        if(!newLookActive){
-//            dealerCard1.setStyle(regularPaneStyle);
-//            dealerCard2.setStyle(regularPaneStyle);
-//            dealerCard3.setStyle(regularPaneStyle);
-//            playerCard1.setStyle(regularPaneStyle);
-//            playerCard2.setStyle(regularPaneStyle);
-//            playerCard3.setStyle(regularPaneStyle);
-//        }else{
-//            dealerCard1.setStyle(newLookPaneStyle);
-//            dealerCard2.setStyle(newLookPaneStyle);
-//            dealerCard3.setStyle(newLookPaneStyle);
-//            playerCard1.setStyle(newLookPaneStyle);
-//            playerCard2.setStyle(newLookPaneStyle);
-//            playerCard3.setStyle(newLookPaneStyle);
-//        }
-//
-//
-//        anteBetList.setDisable(false);
-//        pairPlusBetList.setDisable(false);
-//
-//        anteBetList.getSelectionModel().clearSelection();
-//        pairPlusBetList.getSelectionModel().clearSelection();
-//
-//        resetForNewHand();
-//    }
-
 
     private void updateButtonStates() {
         boolean wagerSelected = anteBetList.getValue() != null;
-
-//        if(placeBet.isDisable()){
-//
-//        }
-
-//        if placeBet.isD
         playButton.setDisable(!wagerSelected);  // Only enable play if a wager is selected
         foldButton.setDisable(!wagerSelected);            // Fold starts disabled until a hand is dealt
     }
@@ -552,9 +540,9 @@ public class GamePlayController {
     }
 
     private void resetForNewRound(){
-        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
-        int oldWinnings = Integer.parseInt(txt);
-        winnings.setText("WINNINGS: $" + oldWinnings);
+//        String txt = winnings.getText().replace("WINNINGS: $", "").trim();
+//        int oldWinnings = Integer.parseInt(txt);
+        winnings.setText("WINNINGS: $" + totalBalance);
         // Clear the cards from display
         dealerCard1.getChildren().clear();
         dealerCard2.getChildren().clear();
