@@ -71,6 +71,61 @@ class MyTest {
         assertEquals("7_of_diamonds.png", c1.getCardFile());
     }
 
+
+    @Test
+    void ThreeCardLogic_Pair_Alt() {
+        ArrayList<Card> hand = MyTest.DummyData.createPairdeck();
+        assertEquals(1, ThreeCardLogic.rankHand(hand));
+    }
+
+    @Test
+    void ThreeCardLogic_ThreeOfKind_Alt() {
+        ArrayList<Card> hand = MyTest.DummyData.create3Kinddeck();
+        assertEquals(4, ThreeCardLogic.rankHand(hand));
+    }
+
+    @Test
+    void Card_GetFilename_QueenDiamonds() {
+        Card c = new Card('D', 12);
+        assertEquals("queen_of_diamonds.png", c.getCardFile());
+    }
+
+    @Test
+    void Card_GetFilename_JackClubs() {
+        Card c = new Card('C', 11);
+        assertEquals("jack_of_clubs.png", c.getCardFile());
+    }
+
+    @Test
+    void Card_GetFilename_10Hearts() {
+        Card c = new Card('H', 10);
+        assertEquals("10_of_hearts.png", c.getCardFile());
+    }
+
+    @Test
+    void Card_GetFilename_3Spades() {
+        Card c = new Card('S', 3);
+        assertEquals("3_of_spades.png", c.getCardFile());
+    }
+
+    @Test
+    void ThreeCardLogic_Straight_Alt() {
+        ArrayList<Card> hand = MyTest.DummyData.createStraightdeck();
+        assertEquals(3, ThreeCardLogic.rankHand(hand));
+    }
+
+    @Test
+    void ThreeCardLogic_Straight_ACE_Alt() {
+        ArrayList<Card> hand = MyTest.DummyData.createStraightdeck_ACE();
+        assertEquals(3, ThreeCardLogic.rankHand(hand));
+    }
+
+    @Test
+    void Card_GetFilename_5Hearts() {
+        Card c = new Card('H', 5);
+        assertEquals("5_of_hearts.png", c.getCardFile());
+    }
+
 //    @Test
 //    void Deck_pullCards(){
 //
